@@ -8,7 +8,8 @@ RUN docker-php-ext-install pdo pdo_mysql mysqli
 RUN a2enmod rewrite
 
 #Install Composer
-RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php')"
+RUN echo "PHP version to follow:\n" && php -v
+RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
 RUN  php composer-setup.php --install-dir=/usr/local/bin/ --filename=composer
 
 COPY src/ /var/www/html/
