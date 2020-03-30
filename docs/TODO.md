@@ -3,15 +3,25 @@
 * ## PHPUnit - unit testing in PHP
 	* Write PHP unit tests for all OO code
 
+* Coding standards
+	* Read in detail about [PSR-4](https://www.php-fig.org/psr/) and how to adhere to this coding specification
+	* Read [clean code](https://github.com/jupeter/clean-code-php) in full
+
 * ## MVC - discover how to write within a primitive MVC pattern constraint in PHP
+	#### Use [.these.](https://code.tutsplus.com/tutorials/mvc-for-noobs--net-10488) [.resources.](https://www.sitepoint.com/the-mvc-pattern-and-php-1/) to understand MVC and implement the pattern in PHP
+
 	* Decide what Base Models and Concrete models are required for the project
 	* Decide what Controllers are required for the project (DB entity only?)
 	* Decide what views are required for the project
 
-* ## Character encoding - UTF-8
-	* Research PDO method parameters (e.g: connect parameters) that ensure that the database is only supplied UTF-8 data OR otherwise ensure that mysqli is safe for use in UTF-8 character transactions
-	* Look for global way of setting php script character encoding as an alternative to writing 'mb_internal_encoding(); mb_http_output();' at the top of every script
-	* IN MYSQL set database and all subsequent tables to UTF-8 encoding
+* ## Security
+	* ### Character encoding - UTF-8
+		* Look for global way of setting php script character encoding as an alternative to writing 'mb_internal_encoding(); mb_http_output();' at the top of every script
+		* IN MYSQL set database and all subsequent tables to UTF-8 encoding
+	* Learn how to write MySQLi prepared statements in order to prevent injection attacks
+
+* ## Error handling
+	* Determine best practise of error handling declarations and whether to use xdebug.scream
 
 * ## MYSQL data
 	* Find out how to include sample MYSQL data in docker build
