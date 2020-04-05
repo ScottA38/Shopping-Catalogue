@@ -11,4 +11,6 @@
 	* Show all products view
 
 ## ./src/Controllers/
-	* Database
+	* Furniture Controller
+    * Book Controller
+    * DVD-Disc Controller
