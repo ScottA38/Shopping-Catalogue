@@ -2,7 +2,14 @@
 
 ## ./src/Models/
 	* Product
+        * Properties:
+            * SKU
+            * Name
+            * Price
 	* Furniture: extends 'Product'
+        * Properties:
+            * (Product props)
+            * Dimensions
 	* Book: extends 'Product'
 	* DVD-disc: extends 'Product'
 

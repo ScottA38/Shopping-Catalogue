@@ -1,42 +1,54 @@
 <?php
-declare(strict_types=1);
+//not PSR-2 compliant, commented
+//declare(strict_types=1);
 
-use PHPUnit\Framework\Testcase;
+namespace WebApp\Tests;
+
+use PHPUnit\Framework\TestCase;
 
 /**
 * Abstract base Test class which outlines testing contract for classes implementing iProduct
 */
-final abstract class iProductTest extends TestCase
+interface IProductTest
 {
     /**
-    * Test that extended product can be created with valid arguments
+    * Test that extended product can be created with valid arguments.
+    * N.B: The 'special' attribute refers to an additional argument expected for each implementor of
     */
-    abstract function testCanBeInstantiatedWithCorrectConstructorArgs();
+    public function testCanBeInstantiatedWithValidConstructorArgs($sku, $name, $price, $special);
 
     /**
     *Assert class constructor fails when given invalid arguments
     */
-    abstract function testCannotBeInstantiatedWithIncorrectConstructorArgs();
+    public function testCannotBeInstantiatedWithInValidConstructorArgs($sku, $name, $price, $special, $exception);
 
     /**
-    * Assert an instance of iProduct implementer compares SKU when evaluating equality with another iProduct implementer
+    * Test objects of identical arguments do not compare equal
     */
-    abstract function testObjectsCompareSKU();
+    public function testEquals();
 
+    /**
+    * Tests for attribute of SKU
+    */
+    public function testHasSKU();
 
-    abstract function testHasSKU();
+    /**
+    * Tests for attribute of name
+    */
+    public function testHasName();
 
-    abstract function testHasName();
-
-    abstract function testHasPrice();
+    /**
+    * Tests for attribute of price
+    */
+    public function testHasPrice();
 
     /**
     * Verify that upon appropriate method call an iProduct implementer is correctly removed from product database
     */
-    abstract function testProductIsRemoved();
+    public function testProductIsRemoved();
 
     /**
     * Verify that upon appropriate method call iProduct implementer is added to product db
     */
-    abstract function testProductIsAdded();
+    public function testProductIsAdded();
 }
