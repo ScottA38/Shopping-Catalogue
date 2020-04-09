@@ -5,20 +5,27 @@
 namespace WebApp\tests;
 
 use PHPUnit\Framework\TestCase;
-use WebApp\Tests;
+use WebApp\Furniture;
+//use WebApp\Tests;
 
-class FurnitureTest extends TestCase implements iProductTest
+//autoloading not working
+require_once 'IProductTest.php';
+
+class FurnitureTest extends TestCase implements IProductTest
 {
 
-    protected $furniture;
+    //protected $furniture;
 
     /**
     * Instantiate an instance of Furniture for use with all test methods not involved with class constructor objectives
     * @dataProvider validConstructorArgumentProvider
     */
-    protected function setUp($sku, $name, $price, $dimensions) : void
+    protected function setUp() : void
     {
-        $this->furniture = new Furniture($sku, $name, $price, $dimensions);
+        /*parent::setUp();
+        $arguments = $this->getProvidedData($this->validConstructorArgumentProvider);
+        echo count($arguments);*/
+
     }
 
     /**
@@ -49,10 +56,12 @@ class FurnitureTest extends TestCase implements iProductTest
 
     /**
     * Test that 2 instances with identical data are not considered equal
+    * @dataProvider validConstructorArgumentProvider
     */
     public function testEquals()
     {
         //Arrange
+        $furniture = new Furniture($sku, $name, $price, $dimensions);
         $furnitureTwo = new Furniture($sku, $name, $price, $dimensions);
 
         //Assert
@@ -61,30 +70,46 @@ class FurnitureTest extends TestCase implements iProductTest
 
     /**
     * Tests for attribute of SKU
+    * @dataProvider validConstructorArgumentProvider
     */
     public function testHasSKU()
     {
+        //Arrange
+        $furniture = new Furniture($sku, $name, $price, $dimensions);
+
+        //Assert
         $this->assertObjectHasAttribute('sku', $this->furniture);
     }
 
     /**
     * Tests for attribute of name
+    * @dataProvider validConstructorArgumentProvider
     */
     public function testHasName()
     {
+        //Arrange
+        $furniture = new Furniture($sku, $name, $price, $dimensions);
+
+        //Assert
         $this->assertObjectHasAttribute('name', $this->furniture);
     }
 
     /**
     * Tests for attribute of price
+    * @dataProvider validConstructorArgumentProvider
     */
     public function testHasPrice()
     {
+        //Arrange
+        $furniture = new Furniture($sku, $name, $price, $dimensions);
+
+        //Assert
         $this->assertObjectHasAttribute('price', $this->furniture);
     }
 
     /**
     * Tests for attribute of Dimensions
+    * @dataProvider validConstructorArgumentProvider
     */
     public function testHasDimensions()
     {
@@ -93,6 +118,7 @@ class FurnitureTest extends TestCase implements iProductTest
 
     /**
     * Test that dimension attribute is an array of length 3
+    * @dataProvider validConstructorArgumentProvider
     */
     public function testDimensionsAttributeIsAThreeItemArray()
     {
@@ -101,11 +127,19 @@ class FurnitureTest extends TestCase implements iProductTest
         $this->assertEquals(3, $dimensionCount);
     }
 
+    /**
+    * Ensure that when appropriate method is used, a new ORM instance is correctly added to the corresponding database
+    * @dataProvider validConstructorArgumentProvider
+    */
     public function testProductIsAdded()
     {
         $this->markTestIncomplete('More knowledge of implementation of Doctrine DBAL models required');
     }
 
+    /**
+    * Ensure that when appropriate method is called the ORM object is removed from the database
+    * @dataProvider validConstructorArgumentProvider
+    */
     public function testProductIsRemoved()
     {
         $this->markTestIncomplete('More knowledge of implementation of Doctrine DBAL models required');
@@ -114,7 +148,7 @@ class FurnitureTest extends TestCase implements iProductTest
     /**
     * This producer gives valid constructor args
     */
-    private function validConstructorArgumentProvider()
+    public function validConstructorArgumentProvider()
     {
         return [
             ["TBL11FN", "Table", 60.0, [120, 50, 70]],
@@ -128,7 +162,7 @@ class FurnitureTest extends TestCase implements iProductTest
     /**
     * This producer gives constructor args followed by an expected exception type
     */
-    private function invalidContructorArgumentProvider()
+    public function invalidContructorArgumentProvider()
     {
         return [
             //SKU formatting error
