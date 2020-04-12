@@ -13,14 +13,14 @@ use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManager;
 
 //placeholder for later paths to ORM entity models
-$paths = array("path-to-entities");
+$paths = array(__DIR__."/src/models");
 $isDevMode = true;
 
 $dbParams = array(
-    'driver' = 'pdo_mysql',
-    'user' = 'admin',
-    'password' = 'pa**w0rd',
-    'dbname' = 'my_db'
+    'driver' => 'pdo_mysql',
+    'user' => 'admin',
+    'password' => 'pa**w0rd',
+    'dbname' => 'my_db'
 );
 
 $config = Setup::createAnnotationMetaDataConfiguration($paths, $isDevMode);

@@ -4,8 +4,6 @@
 
 namespace WebApp\Tests;
 
-use PHPUnit\Framework\TestCase;
-
 /**
 * Abstract base Test class which outlines testing contract for classes implementing iProduct
 */
@@ -41,6 +39,16 @@ interface IProductTest
     * Tests for attribute of price
     */
     public function testHasPrice();
+
+    /**
+    * Tests that price updates correctly
+    */
+    public function testPriceCanBeUpdated();
+
+    /**
+    * Tests that price cannot be set to below 0
+    */
+    public function testPriceCannotBeANegativeValue();
 
     /**
     * Verify that upon appropriate method call an iProduct implementer is correctly removed from product database

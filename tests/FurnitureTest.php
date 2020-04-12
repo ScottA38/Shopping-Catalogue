@@ -5,11 +5,9 @@
 namespace WebApp\tests;
 
 use PHPUnit\Framework\TestCase;
-use WebApp\Furniture;
-//use WebApp\Tests;
 
 //autoloading not working
-require_once 'IProductTest.php';
+//require_once 'IProductTest.php';
 
 class FurnitureTest extends TestCase implements IProductTest
 {
@@ -25,7 +23,6 @@ class FurnitureTest extends TestCase implements IProductTest
         /*parent::setUp();
         $arguments = $this->getProvidedData($this->validConstructorArgumentProvider);
         echo count($arguments);*/
-
     }
 
     /**
@@ -65,7 +62,7 @@ class FurnitureTest extends TestCase implements IProductTest
         $furnitureTwo = new Furniture($sku, $name, $price, $dimensions);
 
         //Assert
-        $this->assertThat($this->furniture, $this->logicalNot($this->equalTo($furnitureTwo)));
+        $this->assertThat($furniture, $this->logicalNot($this->equalTo($furnitureTwo)));
     }
 
     /**
@@ -78,7 +75,7 @@ class FurnitureTest extends TestCase implements IProductTest
         $furniture = new Furniture($sku, $name, $price, $dimensions);
 
         //Assert
-        $this->assertObjectHasAttribute('sku', $this->furniture);
+        $this->assertObjectHasAttribute('sku', $furniture);
     }
 
     /**
@@ -91,7 +88,7 @@ class FurnitureTest extends TestCase implements IProductTest
         $furniture = new Furniture($sku, $name, $price, $dimensions);
 
         //Assert
-        $this->assertObjectHasAttribute('name', $this->furniture);
+        $this->assertObjectHasAttribute('name', $furniture);
     }
 
     /**
@@ -104,7 +101,7 @@ class FurnitureTest extends TestCase implements IProductTest
         $furniture = new Furniture($sku, $name, $price, $dimensions);
 
         //Assert
-        $this->assertObjectHasAttribute('price', $this->furniture);
+        $this->assertObjectHasAttribute('price', $furniture);
     }
 
     /**
@@ -113,18 +110,52 @@ class FurnitureTest extends TestCase implements IProductTest
     */
     public function testHasDimensions()
     {
-        $this->assertObjectHasAttribute('dimensions', $this->furniture);
+        //Arrange
+        $furniture = new Furniture($sku, $name, $price, $dimensions);
+
+        $this->assertObjectHasAttribute('dimensions', $furniture);
     }
 
     /**
-    * Test that dimension attribute is an array of length 3
+    * Assert dimension attribute is an array of length 3
     * @dataProvider validConstructorArgumentProvider
     */
     public function testDimensionsAttributeIsAThreeItemArray()
     {
-        $this->assertIsArray($this->furniture->dimensions);
-        $dimensionCount = count($this->furniture->dimensions);
+        //Arrange
+        $furniture = new Furniture($sku, $name, $price, $dimensions);
+
+        //Assert
+        $this->assertIsArray($furniture->getDimensions());
+
+        $dimensionCount = count($furniture->getDimensions());
         $this->assertEquals(3, $dimensionCount);
+    }
+
+    /**
+    * Call price update function and assert that new price is set in object
+    */
+    public function testPriceCanBeUpdated()
+    {
+        //Arrange
+        $furniture = new Furniture($sku, $name, $price, $dimensions);
+
+        //Act
+        $new_price = $furniture->getPrice * (float)random_int(0, PHP_INT_MAX);
+        $furniture->setPrice($new_price);
+
+        //Assert
+        $this->assertEqual($new_price, $furniture->getPrice());
+    }
+
+    public function testPriceCannotBeANegativeValue()
+    {
+        //Assert
+        $this->expectException(RangeException::class);
+
+        //Arrange
+        $furniture = new Furniture($sku, $name, $price, $dimensions);
+        $furniture->setPrice(-5.0);
     }
 
     /**
