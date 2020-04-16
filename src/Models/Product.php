@@ -1,14 +1,12 @@
 <?php
 
-namespace WebApp;
-
-use function PHPUnit\Framework\throwException;
+namespace WebApp\Models;
 
 /**
  * Not sure if this is a valid DBAL attribute combination...
  * @MappedSuperClass
  * @InheritanceType("SINGLE_TABLE")
- * @DiscriminatorColumn(name="product_type", type="string")
+ * @DiscriminatorColumn(name="PRODUCT_TYPE", type="string")
  * @DiscriminatorMap({"furniture"= "Furniture", "book" = "Book", "dvd-disc" = "DVD"})
  *
  */
@@ -21,7 +19,7 @@ abstract class Product
      * @GeneratedValue
      *
      * @var number
-*/
+    */
     protected int $id;
 
     /**
@@ -42,19 +40,20 @@ abstract class Product
     protected string $categoryInitialism;
 
     //a string concatenation of the product name attribute
-    protected string $nameIntialism;
+    protected string $nameInitialism;
 
-    public function __construct(string $name, string $price, $special)
+    public function __construct(string $name, string $price)
     {
-        $this->categoryInitialism = strtoupper(Product::intialismGenerator($this::class, 2));
-        assert((boolean)$this->initialism, \
-            ErrorException($this::class . " cannot produce an intialism, does it have more than 2 consonants?"));
-        $this->nameInitialism = $this->intialismFactory(Product::intialismGenerator($this::class, 3));
-        assert((boolean)$this->initialism, \
-            ErrorException($this::class . " cannot produce an intialism, does the name attribute " .
-                $this->name . " have more than 2 consonants?"));
-        $this->name = name;
-        $this->price = price;
+        $this->name = $name;
+        $this->price = $price;
+        $baseClassPath = explode("\\", get_class($this));
+        $className = end($baseClassPath);
+        $this->categoryInitialism = $this->initialismGenerator($className, 2);
+        assert((boolean)$this->categoryInitialism, "Intialism generator cannot produce an intialism, does " .
+            $className . " have more than 2 consonants?");
+        $this->nameInitialism = $this->initialismGenerator($name, 3);
+        assert((boolean)$this->nameInitialism, "Initialism generator cannot produce an intialism, does " .
+            $name . " have more than 2 consonants?");
     }
 
     /**
@@ -63,16 +62,17 @@ abstract class Product
      * @param int $length
      * @return string|boolean
      */
-    public static function intialismGenerator(string $input, int $length)
+    public static function initialismGenerator(string $input, int $length)
     {
         $out = "";
-        $lower = strtolower($input);
-        $lower_array = str_split($lower);
-        for ($i = 0; i < count($lower_array); $i++) {
+        $upper = strtoupper($input);
+        $upper_array = str_split($upper);
+        for ($i = 0; $i < count($upper_array); $i++) {
+            if (!in_array($upper_array[$i], array("A", "E", "I", "O", "U", " ", "-"))) {
+                $out .= $upper_array[$i];
+            }
             if (strlen($out) >= $length) {
                 return $out;
-            } elseif (!in_array($lower_array[$i], array("a", "e", "i", "o", "u", " ", "-"))) {
-                $out += $lower_array[$i];
             }
         }
         return false;
@@ -107,7 +107,7 @@ abstract class Product
     public function setPrice(float $newPrice) : void
     {
         assert($newPrice > 0.0, \
-            RangeException('Cannot set price on ' . $this::class .
+            RangeException('Cannot set price on ' . get_class($this) .
                 ' "newPrice" argument ' . $newPrice . ' is equal to or below 0'));
         $this->price = $newPrice;
     }

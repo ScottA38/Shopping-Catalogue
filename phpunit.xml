@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<phpunit bootstrap="./tests/bootstrap.php" colors="true" beStrictAboutChangesToGlobalState="true">
+<phpunit bootstrap="./Tests/bootstrap.php" colors="true" beStrictAboutChangesToGlobalState="true">
     <testsuites>
         <testsuite name="webapp">
             <directory>tests</directory>

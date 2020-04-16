@@ -2,14 +2,13 @@
 //not PSR-2 compliant, commented
 //declare(strict_types=1);
 
-namespace WebApp\tests;
+namespace WebApp\Tests;
 
 use PHPUnit\Framework\TestCase;
+use WebApp\Models\Furniture;
 
-//autoloading not working
-//require_once 'IProductTest.php';
 
-class FurnitureTest extends TestCase implements IProductTest
+class FurnitureTest extends TestCase implements iProductTest
 {
 
     //protected $furniture;
@@ -29,10 +28,10 @@ class FurnitureTest extends TestCase implements IProductTest
     * Ensure Furniture constructor creates instance with valid args
     * @dataProvider validConstructorArgumentProvider
     */
-    public function testCanBeInstantiatedWithValidConstructorArgs($sku, $name, $price, $dimensions)
+    public function testCanBeInstantiatedWithValidConstructorArgs($name, $price, $dimensions)
     {
         //Arrange, Act
-        $furniture = new Furniture($sku, $name, $price, $dimensions);
+        $furniture = new Furniture($name, $price, $dimensions);
 
         //Assert - will/should constructor return a Doctrine DBAL Object?
         $this->isInstanceOf(Furniture::class, $furniture);
@@ -42,13 +41,13 @@ class FurnitureTest extends TestCase implements IProductTest
     * Ensure Furniture constructor fails with invalid args
     * @dataProvider invalidConstructorArgumentProvider
     */
-    public function testCannotBeInstantiatedWithInvalidConstructorArgs($sku, $name, $price, $dimensions, $exception)
+    public function testCannotBeInstantiatedWithInvalidConstructorArgs($name, $price, $dimensions, $exception)
     {
         //Assert
         $this->expectException($exception);
 
         //Arrange, Act
-        $furniture = new Furniture($sku, $name, $price, $dimensions);
+        $furniture = new Furniture($name, $price, $dimensions);
     }
 
     /**
@@ -151,29 +150,11 @@ class FurnitureTest extends TestCase implements IProductTest
     public function testPriceCannotBeANegativeValue()
     {
         //Assert
-        $this->expectException(RangeException::class);
+        $this->expectException(\RangeException::class);
 
         //Arrange
         $furniture = new Furniture($sku, $name, $price, $dimensions);
         $furniture->setPrice(-5.0);
-    }
-
-    /**
-    * Ensure that when appropriate method is used, a new ORM instance is correctly added to the corresponding database
-    * @dataProvider validConstructorArgumentProvider
-    */
-    public function testProductIsAdded()
-    {
-        $this->markTestIncomplete('More knowledge of implementation of Doctrine DBAL models required');
-    }
-
-    /**
-    * Ensure that when appropriate method is called the ORM object is removed from the database
-    * @dataProvider validConstructorArgumentProvider
-    */
-    public function testProductIsRemoved()
-    {
-        $this->markTestIncomplete('More knowledge of implementation of Doctrine DBAL models required');
     }
 
     /**
@@ -182,11 +163,11 @@ class FurnitureTest extends TestCase implements IProductTest
     public function validConstructorArgumentProvider()
     {
         return [
-            ["TBL11FN", "Table", 60.0, [120, 50, 70]],
-            ["CBN33FN", "Cabinet", 70.0, [60, 120, 210]],
-            ["DSK5FN", "Desk", 55.0, [180, 70, 70]],
-            ["PCT102FN", "Picture Frame", 13.0, [60, 40, 4]],
-            ["LMP40FN", "Lamp Shade", 9.0, [40, 40, 25]]
+            ["Table", 60.0, [120, 50, 70]],
+            ["Cabinet", 70.0, [60, 120, 210]],
+            ["Desk", 55.0, [180, 70, 70]],
+            ["Picture Frame", 13.0, [60, 40, 4]],
+            ["Lamp Shade", 9.0, [40, 40, 25]]
         ];
     }
 
@@ -196,16 +177,16 @@ class FurnitureTest extends TestCase implements IProductTest
     public function invalidContructorArgumentProvider()
     {
         return [
-            //SKU formatting error
-            ["TBL011FN", "Table", 60.0, [120, 50, 70], ],
+            //Invalid product name (must have more than 2 consonants in the string)
+            ["It", 60.0, [120, 50, 70], \AssertionError::class],
             //Invalid number of arguments
-            ["CBN33FN", 70.0, [60, 120, 210], ArgumentCountError::class],
+            [70.0, [60, 120, 210], \ArgumentCountError::class],
             //SKU formatting error
-            ["DSK5DV", "Desk", 55.0, [180, 70, 70], ],
+            ["Desk", -10.0, [180, 70, 70], \RangeException::class],
             //Giving price in incorrect format
-            ["PCT102FN", "Picture Frame", "13.0", [60, 40, 4], TypeError::class],
+            ["Picture Frame", "13.0", [60, 40, 4], \TypeError::class],
             //Dimensions in invalid format
-            ["LMP40FN", "Lamp Shade", 9.0, [4], LengthException::class]
+            ["Lamp Shade", 9.0, [4], \LengthException::class]
         ];
     }
 }
