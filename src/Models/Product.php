@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace WebApp\Models;
 
 /**
@@ -49,10 +51,10 @@ abstract class Product
         $baseClassPath = explode("\\", get_class($this));
         $className = end($baseClassPath);
         $this->categoryInitialism = $this->initialismGenerator($className, 2);
-        assert((boolean)$this->categoryInitialism, "Intialism generator cannot produce an intialism, does " .
+        assert((bool)$this->categoryInitialism, "Intialism generator cannot produce an intialism, does " .
             $className . " have more than 2 consonants?");
         $this->nameInitialism = $this->initialismGenerator($name, 3);
-        assert((boolean)$this->nameInitialism, "Initialism generator cannot produce an intialism, does " .
+        assert((bool)$this->nameInitialism, "Initialism generator cannot produce an intialism, does " .
             $name . " have more than 2 consonants?");
     }
 
@@ -79,32 +81,32 @@ abstract class Product
     }
 
 
-    public function getSku() : string
+    public function getSku(): string
     {
         return $this->nameIntialism . $this->id . $this->categoryInitialism;
     }
 
-    public function getName() : string
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function getPrice() : float
+    public function getPrice(): float
     {
         return $this->price;
     }
 
-    public function getNameInitialism() : string
+    public function getNameInitialism(): string
     {
         return $this->nameIntialism;
     }
 
-    public function getCategoryInitialism() : string
+    public function getCategoryInitialism(): string
     {
         return $this->categoryInitialism;
     }
 
-    public function setPrice(float $newPrice) : void
+    public function setPrice(float $newPrice): void
     {
         assert($newPrice > 0.0, \
             RangeException('Cannot set price on ' . get_class($this) .

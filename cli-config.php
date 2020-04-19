@@ -1,4 +1,5 @@
 <?php
+
 /* Config file to connect DBAL EntityManager instance ( from ./bootstrap.php ) to ./vendor/bin/doctrine
 such that CLI commands can be used
 

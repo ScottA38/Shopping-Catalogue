@@ -1,4 +1,5 @@
 <?php
+
 /* File to initialise Doctrine DBAL ORM library including operations:
 - Designate Metadata repository and metadata config (will be used to generate SQL db Schema later)
 - Generate an EntityManager class with database information which will manage mapping between written
@@ -13,7 +14,7 @@ use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManager;
 
 //placeholder for later paths to ORM entity models
-$paths = array(__DIR__."/src/models");
+$paths = array(__DIR__ . "/src/models");
 $isDevMode = true;
 
 $dbParams = array(

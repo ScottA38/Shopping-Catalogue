@@ -1,27 +1,29 @@
 <?php
-//not PSR-2 compliant, commented
-//declare(strict_types=1);
+
+declare(strict_types=1);
 
 namespace WebApp\Tests;
 
 use PHPUnit\Framework\TestCase;
 use WebApp\Models\Furniture;
 
-
 class FurnitureTest extends TestCase implements iProductTest
 {
 
-    //protected $furniture;
+    protected array $furniture = [];
 
     /**
-    * Instantiate an instance of Furniture for use with all test methods not involved with class constructor objectives
-    * @dataProvider validConstructorArgumentProvider
+    * Instantiate an instances of Furniture for use with test methods
     */
-    protected function setUp() : void
+    protected function setUp(): void
     {
-        /*parent::setUp();
-        $arguments = $this->getProvidedData($this->validConstructorArgumentProvider);
-        echo count($arguments);*/
+        $this->furniture = [];
+
+        $args = $this->validConstructorArgumentProvider();
+
+        for ($i = 0; $i < count($args); $i++) {
+            array_push($this->furniture, $args[$i]);
+        }
     }
 
     /**
@@ -39,122 +41,108 @@ class FurnitureTest extends TestCase implements iProductTest
 
     /**
     * Ensure Furniture constructor fails with invalid args
-    * @dataProvider invalidConstructorArgumentProvider
+    * @dataProvider invalidContructorArgumentProvider
     */
-    public function testCannotBeInstantiatedWithInvalidConstructorArgs($name, $price, $dimensions, $exception)
+    public function testCannotBeInstantiatedWithInvalidArgs($name, $price, $dimensions, $exception)
     {
         //Assert
         $this->expectException($exception);
 
         //Arrange, Act
-        $furniture = new Furniture($name, $price, $dimensions);
+        new Furniture($name, $price, $dimensions);
     }
 
     /**
     * Test that 2 instances with identical data are not considered equal
-    * @dataProvider validConstructorArgumentProvider
+    * @dataProvider instanceProvider
     */
-    public function testEquals()
+    public function testEquals(Furniture $obj)
     {
         //Arrange
-        $furniture = new Furniture($sku, $name, $price, $dimensions);
-        $furnitureTwo = new Furniture($sku, $name, $price, $dimensions);
+        $dataProvider = $this->validConstructorArgumentProvider()[0];
+        $furnitureTwo = new Furniture($dataProvider[0], $dataProvider[1], $dataProvider[2]);
 
         //Assert
-        $this->assertThat($furniture, $this->logicalNot($this->equalTo($furnitureTwo)));
+        $this->assertThat($obj, $this->logicalNot($this->equalTo($furnitureTwo)));
     }
 
     /**
     * Tests for attribute of SKU
-    * @dataProvider validConstructorArgumentProvider
+    * @dataProvider instanceProvider
     */
-    public function testHasSKU()
+    public function testHasSKU(Furniture $obj)
     {
-        //Arrange
-        $furniture = new Furniture($sku, $name, $price, $dimensions);
-
         //Assert
-        $this->assertObjectHasAttribute('sku', $furniture);
+        $this->assertObjectHasAttribute('sku', $obj);
     }
 
     /**
     * Tests for attribute of name
-    * @dataProvider validConstructorArgumentProvider
+    * @dataProvider instanceProvider
     */
-    public function testHasName()
+    public function testHasName(Furniture $obj)
     {
-        //Arrange
-        $furniture = new Furniture($sku, $name, $price, $dimensions);
-
         //Assert
-        $this->assertObjectHasAttribute('name', $furniture);
+        $this->assertObjectHasAttribute('name', $obj);
     }
 
     /**
     * Tests for attribute of price
-    * @dataProvider validConstructorArgumentProvider
+    * @dataProvider instanceProvider
     */
-    public function testHasPrice()
+    public function testHasPrice(Furniture $obj)
     {
-        //Arrange
-        $furniture = new Furniture($sku, $name, $price, $dimensions);
-
         //Assert
-        $this->assertObjectHasAttribute('price', $furniture);
+        $this->assertObjectHasAttribute('price', $obj);
     }
 
     /**
     * Tests for attribute of Dimensions
-    * @dataProvider validConstructorArgumentProvider
+    * @dataProvider instanceProvider
     */
-    public function testHasDimensions()
+    public function testHasDimensions(Furniture $obj)
     {
-        //Arrange
-        $furniture = new Furniture($sku, $name, $price, $dimensions);
-
-        $this->assertObjectHasAttribute('dimensions', $furniture);
+        $this->assertObjectHasAttribute('dimensions', $obj);
     }
 
     /**
     * Assert dimension attribute is an array of length 3
-    * @dataProvider validConstructorArgumentProvider
+    * @dataProvider instanceProvider
     */
-    public function testDimensionsAttributeIsAThreeItemArray()
+    public function testDimensionsAttributeIsAThreeItemArray(Furniture $obj)
     {
-        //Arrange
-        $furniture = new Furniture($sku, $name, $price, $dimensions);
-
         //Assert
-        $this->assertIsArray($furniture->getDimensions());
+        $this->assertIsArray($obj->getDimensions());
 
-        $dimensionCount = count($furniture->getDimensions());
+        $dimensionCount = count($obj->getDimensions());
         $this->assertEquals(3, $dimensionCount);
     }
 
     /**
     * Call price update function and assert that new price is set in object
+    * @dataProvider instanceProvider
     */
-    public function testPriceCanBeUpdated()
+    public function testPriceCanBeUpdated(Furniture $obj)
     {
-        //Arrange
-        $furniture = new Furniture($sku, $name, $price, $dimensions);
-
-        //Act
-        $new_price = $furniture->getPrice * (float)random_int(0, PHP_INT_MAX);
-        $furniture->setPrice($new_price);
+        //generate random price to update price attribute to
+        $new_price = (float)random_int(0, PHP_INT_MAX);
+        $obj->setPrice($new_price);
 
         //Assert
-        $this->assertEqual($new_price, $furniture->getPrice());
+        $this->assertEqual($new_price, $obj->getPrice());
     }
 
-    public function testPriceCannotBeANegativeValue()
+    /**
+     *Tests that price cattirbute cannot be set as negative
+     *@dataProvider instanceProvider
+     */
+    public function testPriceCannotBeANegativeValue(Furniture $obj)
     {
         //Assert
         $this->expectException(\RangeException::class);
 
         //Arrange
-        $furniture = new Furniture($sku, $name, $price, $dimensions);
-        $furniture->setPrice(-5.0);
+        $obj->setPrice(-5.0);
     }
 
     /**
@@ -170,6 +158,7 @@ class FurnitureTest extends TestCase implements iProductTest
             ["Lamp Shade", 9.0, [40, 40, 25]]
         ];
     }
+
 
     /**
     * This producer gives constructor args followed by an expected exception type
@@ -188,5 +177,14 @@ class FurnitureTest extends TestCase implements iProductTest
             //Dimensions in invalid format
             ["Lamp Shade", 9.0, [4], \LengthException::class]
         ];
+    }
+
+    /**
+     * Test method to generate test subject instances
+     */
+    public function instanceProvider()
+    {
+        assert($this->furniture !== null);
+        return $this->furniture;
     }
 }

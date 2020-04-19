@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace WebApp\Models;
 
 /**
@@ -24,7 +26,7 @@ class Furniture extends Product
      *
      * @var string
      */
-    const PRODUCT_TYPE = 'furniture';
+    public const PRODUCT_TYPE = 'furniture';
 
     public function __construct(string $name, float $price, array $dimensions)
     {
@@ -36,7 +38,7 @@ class Furniture extends Product
         $this->dimensions = $dimensions;
     }
 
-    public function getDimensions() : array
+    public function getDimensions(): array
     {
         return $this->dimensions;
     }
