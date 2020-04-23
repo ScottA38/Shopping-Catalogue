@@ -7,7 +7,7 @@ namespace WebApp\Tests;
 use PHPUnit\Framework\TestCase;
 use WebApp\Models\Furniture;
 
-class FurnitureTest extends TestCase implements iProductTest
+class FurnitureTest extends TestCase implements IProductTest
 {
 
     protected array $furniture = [];
@@ -30,7 +30,7 @@ class FurnitureTest extends TestCase implements iProductTest
     * Ensure Furniture constructor creates instance with valid args
     * @dataProvider validConstructorArgumentProvider
     */
-    public function testCanBeInstantiatedWithValidConstructorArgs($name, $price, $dimensions)
+    public function testCanBeInstantiatedWithValidConstructorArgs(string $name, float $price, array $dimensions)
     {
         //Arrange, Act
         $furniture = new Furniture($name, $price, $dimensions);
@@ -167,15 +167,15 @@ class FurnitureTest extends TestCase implements iProductTest
     {
         return [
             //Invalid product name (must have more than 2 consonants in the string)
-            ["It", 60.0, [120, 50, 70], \AssertionError::class],
+            ["It", 60.0, [120, 50, 70], 'LengthException'],
             //Invalid number of arguments
-            [70.0, [60, 120, 210], \ArgumentCountError::class],
+            //[70.0, [60, 120, 210], \ArgumentCountError::class],
             //SKU formatting error
-            ["Desk", -10.0, [180, 70, 70], \RangeException::class],
+            ["Desk", -10.0, [180, 70, 70], 'RangeException'],
             //Giving price in incorrect format
-            ["Picture Frame", "13.0", [60, 40, 4], \TypeError::class],
+            ["Picture Frame", "13.0", [60, 40, 4], 'TypeError'],
             //Dimensions in invalid format
-            ["Lamp Shade", 9.0, [4], \LengthException::class]
+            ["Lamp Shade", 9.0, [4], 'LengthException']
         ];
     }
 

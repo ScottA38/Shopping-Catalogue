@@ -20,7 +20,7 @@ interface IProductTest
     /**
     *Assert class constructor fails when given invalid arguments
     */
-    public function testCannotBeInstantiatedWithInValidArgs(string $name, float $price, array $special, $exception);
+    public function testCannotBeInstantiatedWithInValidArgs($name, $price, $special, $exception);
 
     /**
     * Test objects of identical arguments do not compare equal

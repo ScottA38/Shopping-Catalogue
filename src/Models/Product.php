@@ -36,7 +36,7 @@ abstract class Product
      *
      * @var float
      */
-    protected float $price;
+    protected float $price = 0.0;
 
     //a string concatentation of the product category
     protected string $categoryInitialism;
@@ -44,18 +44,14 @@ abstract class Product
     //a string concatenation of the product name attribute
     protected string $nameInitialism;
 
-    public function __construct(string $name, string $price)
+    public function __construct(string $name, float $price)
     {
         $this->name = $name;
-        $this->price = $price;
+        $this->setPrice($price);
         $baseClassPath = explode("\\", get_class($this));
         $className = end($baseClassPath);
         $this->categoryInitialism = $this->initialismGenerator($className, 2);
-        assert((bool)$this->categoryInitialism, "Intialism generator cannot produce an intialism, does " .
-            $className . " have more than 2 consonants?");
         $this->nameInitialism = $this->initialismGenerator($name, 3);
-        assert((bool)$this->nameInitialism, "Initialism generator cannot produce an intialism, does " .
-            $name . " have more than 2 consonants?");
     }
 
     /**
@@ -77,7 +73,7 @@ abstract class Product
                 return $out;
             }
         }
-        return false;
+        throw new \LengthException('An initialism cannot be created from ' . $input . ', too few consonants');
     }
 
 
@@ -108,9 +104,11 @@ abstract class Product
 
     public function setPrice(float $newPrice): void
     {
-        assert($newPrice > 0.0, \
-            RangeException('Cannot set price on ' . get_class($this) .
-                ' "newPrice" argument ' . $newPrice . ' is equal to or below 0'));
-        $this->price = $newPrice;
+        if ($newPrice < 0.0) {
+            throw new \RangeException('Cannot set price on ' . get_class($this) . ' "newPrice" argument ' . $newPrice . ' is equal to or below 0');
+        }
+        else {
+            $this->price = $newPrice;
+        }
     }
 }
