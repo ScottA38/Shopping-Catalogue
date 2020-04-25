@@ -10,20 +10,24 @@ use WebApp\Models\Furniture;
 class FurnitureTest extends TestCase implements IProductTest
 {
 
-    protected array $furniture = [];
+    protected ?Furniture $furniture;
 
     /**
     * Instantiate an instances of Furniture for use with test methods
     */
     protected function setUp(): void
     {
-        $this->furniture = [];
+        parent::setUp();
+        $args = $this->getProvidedData();
+        //var_dump($args);
 
-        $args = $this->validConstructorArgumentProvider();
-
-        for ($i = 0; $i < count($args); $i++) {
-            array_push($this->furniture, $args[$i]);
+        if (count($args) !== 3) {
+            $this->furniture = null;
+            return;
         }
+        $this->furniture = new Furniture(...$args);
+
+        $this->seedId($this->furniture);
     }
 
     /**
@@ -36,7 +40,7 @@ class FurnitureTest extends TestCase implements IProductTest
         $furniture = new Furniture($name, $price, $dimensions);
 
         //Assert - will/should constructor return a Doctrine DBAL Object?
-        $this->isInstanceOf(Furniture::class, $furniture);
+        $this->assertInstanceOf(Furniture::class, $furniture);
     }
 
     /**
@@ -54,95 +58,107 @@ class FurnitureTest extends TestCase implements IProductTest
 
     /**
     * Test that 2 instances with identical data are not considered equal
-    * @dataProvider instanceProvider
+    * @dataProvider validConstructorArgumentProvider
     */
-    public function testEquals(Furniture $obj)
+    public function testEquals(string $name, float $price, array $dimensions)
     {
         //Arrange
         $dataProvider = $this->validConstructorArgumentProvider()[0];
         $furnitureTwo = new Furniture($dataProvider[0], $dataProvider[1], $dataProvider[2]);
+        //seed a random Id number in order to test SKU-related functionality
+        $this::seedId($furnitureTwo);
 
         //Assert
-        $this->assertThat($obj, $this->logicalNot($this->equalTo($furnitureTwo)));
+        $this->assertTrue(!$this->furniture->compareTo($furnitureTwo));
     }
 
     /**
     * Tests for attribute of SKU
-    * @dataProvider instanceProvider
+    * @dataProvider validConstructorArgumentProvider
     */
-    public function testHasSKU(Furniture $obj)
+    public function testHasSKU()
     {
         //Assert
-        $this->assertObjectHasAttribute('sku', $obj);
+        $this->assertTrue(method_exists($this->furniture, 'getSku'));
+    }
+
+    /**
+     * Tests that SKU format provided by object is correct
+     * @dataProvider validConstructorArgumentProvider
+     */
+    public function testSKUIsProvidedInCorrectFormat()
+    {
+        //Assert
+        $this->assertMatchesRegularExpression('/[A-Z]{3}\d+FR/', $this->furniture->getSku());
     }
 
     /**
     * Tests for attribute of name
-    * @dataProvider instanceProvider
+    * @dataProvider validConstructorArgumentProvider
     */
-    public function testHasName(Furniture $obj)
+    public function testHasName()
     {
         //Assert
-        $this->assertObjectHasAttribute('name', $obj);
+        $this->assertObjectHasAttribute('name', $this->furniture);
     }
 
     /**
     * Tests for attribute of price
-    * @dataProvider instanceProvider
+    * @dataProvider validConstructorArgumentProvider
     */
-    public function testHasPrice(Furniture $obj)
+    public function testHasPrice()
     {
         //Assert
-        $this->assertObjectHasAttribute('price', $obj);
+        $this->assertObjectHasAttribute('price', $this->furniture);
     }
 
     /**
     * Tests for attribute of Dimensions
-    * @dataProvider instanceProvider
+    * @dataProvider validConstructorArgumentProvider
     */
-    public function testHasDimensions(Furniture $obj)
+    public function testHasDimensions()
     {
-        $this->assertObjectHasAttribute('dimensions', $obj);
+        $this->assertObjectHasAttribute('dimensions', $this->furniture);
     }
 
     /**
     * Assert dimension attribute is an array of length 3
-    * @dataProvider instanceProvider
+    * @dataProvider validConstructorArgumentProvider
     */
-    public function testDimensionsAttributeIsAThreeItemArray(Furniture $obj)
+    public function testDimensionsAttributeIsAThreeItemArray()
     {
         //Assert
-        $this->assertIsArray($obj->getDimensions());
+        $this->assertIsArray($this->furniture->getDimensions());
 
-        $dimensionCount = count($obj->getDimensions());
+        $dimensionCount = count($this->furniture->getDimensions());
         $this->assertEquals(3, $dimensionCount);
     }
 
     /**
     * Call price update function and assert that new price is set in object
-    * @dataProvider instanceProvider
+    * @dataProvider validConstructorArgumentProvider
     */
-    public function testPriceCanBeUpdated(Furniture $obj)
+    public function testPriceCanBeUpdated()
     {
         //generate random price to update price attribute to
         $new_price = (float)random_int(0, PHP_INT_MAX);
-        $obj->setPrice($new_price);
+        $this->furniture->setPrice($new_price);
 
         //Assert
-        $this->assertEqual($new_price, $obj->getPrice());
+        $this->assertEquals($new_price, $this->furniture->getPrice());
     }
 
     /**
      *Tests that price cattirbute cannot be set as negative
-     *@dataProvider instanceProvider
+     *@dataProvider validConstructorArgumentProvider
      */
-    public function testPriceCannotBeANegativeValue(Furniture $obj)
+    public function testPriceCannotBeANegativeValue()
     {
         //Assert
         $this->expectException(\RangeException::class);
 
         //Arrange
-        $obj->setPrice(-5.0);
+        $this->furniture->setPrice(-5.0);
     }
 
     /**
@@ -184,7 +200,20 @@ class FurnitureTest extends TestCase implements IProductTest
      */
     public function instanceProvider()
     {
-        assert($this->furniture !== null);
+        assert(count($this->furniture) > 0);
         return $this->furniture;
+    }
+
+
+    /**
+     * mock the id number in the class in order to make SKU-related functions work
+     * @param Furniture
+     */
+    public static function seedId(Furniture $obj)
+    {
+        $refCls = new \ReflectionObject($obj);
+        $refProp = $refCls->getProperty('id');
+        $refProp->setAccessible(true);
+        $refProp->setValue($obj, random_int(0, 1200));
     }
 }

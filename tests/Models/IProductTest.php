@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace WebApp\Tests;
 
-use WebApp\Models\Furniture;
-
 /**
 * Abstract base Test class which outlines testing contract for classes implementing iProduct
 */
@@ -24,37 +22,36 @@ interface IProductTest
 
     /**
     * Test objects of identical arguments do not compare equal
-    * @param Furniture
     */
-    public function testEquals(Furniture $obj);
+    public function testEquals(string $name, float $age, array $dimensions);
 
     /**
     * Tests for attribute of SKU
-    * @param Furniture
     */
-    public function testHasSKU(Furniture $obj);
+    public function testHasSKU();
+
+    /**
+     * Tests that SKU provided by class is of correct format
+     */
+    public function testSKUIsProvidedInCorrectFormat();
 
     /**
     * Tests for attribute of name
-    * @param Furniture
     */
-    public function testHasName(Furniture $obj);
+    public function testHasName();
 
     /**
     * Tests for attribute of price
-    * @param Furniture
     */
-    public function testHasPrice(Furniture $obj);
+    public function testHasPrice();
 
     /**
     * Tests that price updates correctly
-    * @param Furniture
     */
-    public function testPriceCanBeUpdated(Furniture $obj);
+    public function testPriceCanBeUpdated();
 
     /**
     * Tests that price cannot be set to below
-    * @param Furniture
     */
-    public function testPriceCannotBeANegativeValue(Furniture $obj);
+    public function testPriceCannotBeANegativeValue();
 }

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace WebApp\Models;
 
+use WebApp\IComparable;
+
 /**
  * Not sure if this is a valid DBAL attribute combination...
  * @MappedSuperClass
@@ -12,7 +14,7 @@ namespace WebApp\Models;
  * @DiscriminatorMap({"furniture"= "Furniture", "book" = "Book", "dvd-disc" = "DVD"})
  *
  */
-abstract class Product
+abstract class Product implements IComparable
 {
 
     /**
@@ -76,10 +78,25 @@ abstract class Product
         throw new \LengthException('An initialism cannot be created from ' . $input . ', too few consonants');
     }
 
+    /**
+     * Implement workaround custom-comparability between product classes
+     * @param Product
+     */
+    public function compareTo(IComparable $other): bool
+    {
+        if (($other instanceof $this) === false) {
+            $current = end(explode('/', __CLASS__));
+            $arg = end(explode('/', get_class($other)));
+            throw new \TypeError('Comparing instances of different types, should both be of type ' . $current .
+                ' but got argument of type : ' . $arg);
+        }
+        return $this->getSku() === $other->getSku();
+    }
+
 
     public function getSku(): string
     {
-        return $this->nameIntialism . $this->id . $this->categoryInitialism;
+        return $this->nameInitialism . $this->id . $this->categoryInitialism;
     }
 
     public function getName(): string
@@ -105,9 +122,9 @@ abstract class Product
     public function setPrice(float $newPrice): void
     {
         if ($newPrice < 0.0) {
-            throw new \RangeException('Cannot set price on ' . get_class($this) . ' "newPrice" argument ' . $newPrice . ' is equal to or below 0');
-        }
-        else {
+            throw new \RangeException('Cannot set price on ' . get_class($this) .
+                ' "newPrice" argument ' . $newPrice . ' is equal to or below 0');
+        } else {
             $this->price = $newPrice;
         }
     }
