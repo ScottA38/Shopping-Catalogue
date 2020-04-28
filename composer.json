@@ -12,7 +12,6 @@
 		"classmap": ["src/", "src/Models/"],
 		"psr-0": {
             "WebApp\\": "src/",
-			"WebApp\\Models\\": "src/Models/"
          }
 	},
     "autoload-dev" : {

@@ -23,11 +23,10 @@ class FurnitureTest extends TestCase implements IProductTest
 
         if (count($args) !== 3) {
             $this->furniture = null;
-            return;
+        } else {
+            $this->furniture = new Furniture(...$args);
+            $this->seedId($this->furniture);
         }
-        $this->furniture = new Furniture(...$args);
-
-        $this->seedId($this->furniture);
     }
 
     /**
@@ -164,7 +163,7 @@ class FurnitureTest extends TestCase implements IProductTest
     /**
     * This producer gives valid constructor args
     */
-    public function validConstructorArgumentProvider()
+    public static function validConstructorArgumentProvider()
     {
         return [
             ["Table", 60.0, [120, 50, 70]],
@@ -179,7 +178,7 @@ class FurnitureTest extends TestCase implements IProductTest
     /**
     * This producer gives constructor args followed by an expected exception type
     */
-    public function invalidContructorArgumentProvider()
+    public static function invalidContructorArgumentProvider()
     {
         return [
             //Invalid product name (must have more than 2 consonants in the string)
@@ -193,15 +192,6 @@ class FurnitureTest extends TestCase implements IProductTest
             //Dimensions in invalid format
             ["Lamp Shade", 9.0, [4], 'LengthException']
         ];
-    }
-
-    /**
-     * Test method to generate test subject instances
-     */
-    public function instanceProvider()
-    {
-        assert(count($this->furniture) > 0);
-        return $this->furniture;
     }
 
 

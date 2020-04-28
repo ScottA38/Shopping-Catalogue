@@ -8,7 +8,7 @@ adopted from https://www.doctrine-project.org/projects/doctrine-orm/en/current/r
 
 use Doctrine\ORM\Tools\Console\ConsoleRunner;
 
-$bootstrap = 'bootstrap.php';
+$bootstrap = 'src/bootstrap.php';
 
 require_once $bootstrap;
 
