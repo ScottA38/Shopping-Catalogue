@@ -2,19 +2,30 @@
 
 declare(strict_types=1);
 
-namespace WebApp\Tests;
+namespace WebApp\Tests\Controllers;
 
 use PHPUnit\Framework\TestCase;
 use WebApp\Controllers\FurnitureController;
 use WebApp\Models\Furniture;
+use WebApp\Tests\Models\FurnitureTest;
 //bootstraps doctrine entityManager
 use WebApp\Bootstrap;
+use Doctrine\ORM\EntityManager;
 
 class FurnitureControllerTest extends TestCase implements IProductControllerTest
 {
 
     protected ?FurnitureController $furnitureController;
 
+    protected static ?EntityManager $em;
+
+
+    public static function setUpBeforeClass(): void
+    {
+        $bootstrap = Bootstrap::getInstance();
+        //extract EntityManager from Bootstrap instance
+        FurnitureControllerTest::$em = $bootstrap->getEntityManager();
+    }
 
     protected function setUp(): void
     {
@@ -25,10 +36,10 @@ class FurnitureControllerTest extends TestCase implements IProductControllerTest
 
     /**
      * {@inheritDoc}
-     * @see \WebApp\Models\IProductControllerTest::testAddProduct()
+     * @see \WebApp\Tests\Controllers\IProductControllerTest::testAddProduct()
      * @dataProvider validFurnitureConstructorArgumentProvider
      */
-    public function testAddProduct(string $name, float $price, array $dimensions)
+    public function testAddProduct(string $name, float $price, $dimensions)
     {
         //Arrange
         $furn = new Furniture($name, $price, $dimensions);
@@ -39,7 +50,7 @@ class FurnitureControllerTest extends TestCase implements IProductControllerTest
         $this->furnitureController->addProduct($furn);
 
         //Assert - query the database to see if product has been added
-        $query = $em->createQuery("SELECT furn FROM WebApp\Model\Furniture furn WHERE furn.sku='{$sku}'");
+        $query = Bootstrap::$em->createQuery("SELECT furn FROM WebApp\Model\Furniture furn WHERE furn.sku='{$sku}'");
         $result = $query->getResult();
     }
 

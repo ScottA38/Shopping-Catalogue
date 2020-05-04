@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace WebApp\Tests;
+namespace WebApp\Tests\Models;
 
 /**
 * Interface outlining basic testing contract for tests which test a 'Product' object base class

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace WebApp\Models;
+namespace WebApp\Tests\Controllers;
 
 /**
  * Interface outlining basic testing contract for classes inheriting 'ProductController' base class
@@ -14,7 +14,7 @@ interface IProductControllerTest
     /**
      * Product can be added to database successfully
      */
-    public function testAddProduct();
+    public function testAddProduct(string $name, float $price, $special);
 
     /**
      * Product can be removed from database successfully and cleanly

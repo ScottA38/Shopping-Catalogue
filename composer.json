@@ -9,14 +9,12 @@
 		"doctrine/orm": "~2.7"
 	},
 	"autoload" : {
-		"classmap": ["src/", "src/Models/"],
-		"psr-0": {
-            "WebApp\\": "src/",
+		"psr-4": {
+            "WebApp\\": "src/"
          }
 	},
     "autoload-dev" : {
-		"classmap": ["tests/", "tests/Models/"],
-        "psr-0": {
+        "psr-4": {
             "WebApp\\Tests\\" : "tests/"
         }
     }
