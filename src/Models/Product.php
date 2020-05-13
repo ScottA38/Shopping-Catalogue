@@ -19,12 +19,13 @@ abstract class Product implements IComparable
 
     /**
      * Mapping an integer-only primary key for each Product implementer
-     * @Id @Column(type="integer", unique=TRUE)
-     * @GeneratedValue
+     * @Id @Column(type="string", unique=TRUE)
+     * @GeneratedValue(strategy="CUSTOM")
+     * @CustomIdGenerator(class="WebApp\SkuGenerator")
      *
-     * @var number
+     * @var string
     */
-    protected int $id;
+    protected string $sku;
 
     /**
      * @Column(type="string", length=40)
@@ -40,42 +41,11 @@ abstract class Product implements IComparable
      */
     protected float $price = 0.0;
 
-    //a string concatentation of the product category
-    protected string $categoryInitialism;
-
-    //a string concatenation of the product name attribute
-    protected string $nameInitialism;
 
     public function __construct(string $name, float $price)
     {
         $this->name = $name;
         $this->setPrice($price);
-        $baseClassPath = explode("\\", get_class($this));
-        $className = end($baseClassPath);
-        $this->categoryInitialism = $this->initialismGenerator($className, 2);
-        $this->nameInitialism = $this->initialismGenerator($name, 3);
-    }
-
-    /**
-     * Returns the first `$length` consonants of a string in lowercases
-     * @param string $input
-     * @param int $length
-     * @return string|boolean
-     */
-    public static function initialismGenerator(string $input, int $length)
-    {
-        $out = "";
-        $upper = strtoupper($input);
-        $upper_array = str_split($upper);
-        for ($i = 0; $i < count($upper_array); $i++) {
-            if (!in_array($upper_array[$i], array("A", "E", "I", "O", "U", " ", "-"))) {
-                $out .= $upper_array[$i];
-            }
-            if (strlen($out) >= $length) {
-                return $out;
-            }
-        }
-        throw new \LengthException('An initialism cannot be created from ' . $input . ', too few consonants');
     }
 
     /**
@@ -96,7 +66,7 @@ abstract class Product implements IComparable
 
     public function getSku(): string
     {
-        return $this->nameInitialism . $this->id . $this->categoryInitialism;
+        return $this->sku;
     }
 
     public function getName(): string
@@ -107,16 +77,6 @@ abstract class Product implements IComparable
     public function getPrice(): float
     {
         return $this->price;
-    }
-
-    public function getNameInitialism(): string
-    {
-        return $this->nameIntialism;
-    }
-
-    public function getCategoryInitialism(): string
-    {
-        return $this->categoryInitialism;
     }
 
     public function setPrice(float $newPrice): void
