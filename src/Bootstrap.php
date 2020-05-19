@@ -23,14 +23,14 @@ class Bootstrap
         'useSimpleAnnotoationReader' => false
     ];
 
-
     /**
      * Create an EntityManager instance
      * @return array
      */
     public function createEntityManager(array $dbParams): EntityManager
     {
-        $config = Setup::createAnnotationMetaDataConfiguration($this->setupParams['paths'], $this->setupParams['isDevMode']);
+        $config =
+        Setup::createAnnotationMetaDataConfiguration($this->setupParams['paths'], $this->setupParams['isDevMode']);
         return EntityManager::create($dbParams, $config);
     }
 }

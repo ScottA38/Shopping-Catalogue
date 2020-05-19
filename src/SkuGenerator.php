@@ -17,15 +17,18 @@ class SkuGenerator extends AbstractIdGenerator
      * @param mixed (has to be mixed because mock entity manager might be used)
      * @param
      */
-    public function generate(EntityManager $em, Product $entity): string
+    public function generate(EntityManager $em, $entity): string
     {
+        //sanity-checking the parameter
+        assert(is_subclass_of($entity, 'WebApp\Models\Product'));
+
         $baseClassPath = explode("\\", get_class($entity));
         $className = end($baseClassPath);
 
         $categoryInitialism = SkuGenerator::initialismGenerator($className, 2);
         $nameInitialism = SkuGenerator::initialismGenerator($entity->getName(), 3);
 
-        $num = count($em->getRepository($className)->findAll()) + 1;
+        $num = count($em->getRepository(get_class($entity))->findBy(['name' => $entity->getName()])) + 1;
 
         return $nameInitialism . $num . $categoryInitialism;
     }
