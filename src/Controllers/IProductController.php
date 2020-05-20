@@ -9,6 +9,11 @@ namespace WebApp\Controllers;
  */
 interface IProductController
 {
+    public function add(string $name, float $price, $special): string;
 
+    public function remove(string $sku): void;
 
+    public function removeAll(): array;
+
+    public function updatePrice(string $sku, float $price): void;
 }

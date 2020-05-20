@@ -19,7 +19,7 @@ interface IProductControllerTest
     /**
      * Product can be removed from database successfully and cleanly
      */
-    public function testRemoveProduct();
+    public function testRemoveProduct(string $sku);
 
 
     /**
@@ -31,5 +31,5 @@ interface IProductControllerTest
      * The user can update the price of a specific product
      * @param mixed $sku
      */
-    public function testUpdatePrice($sku);
+    public function testUpdatePrice(string $sku, float $price);
 }

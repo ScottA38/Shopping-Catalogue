@@ -7,7 +7,6 @@ namespace WebApp\Util;
 use Doctrine\ORM\EntityManager;
 use Faker\ORM\Doctrine\Populator;
 use Faker\Factory;
-use WebApp\Bootstrap;
 use WebApp\Models\Product;
 use Faker\Generator;
 
@@ -16,11 +15,9 @@ class EntityPopulator
     private EntityManager $em;
     private Generator $generator;
 
-    public function __construct(array $dbParams)
+    public function __construct(EntityManager $em)
     {
-        $bootstrap = new Bootstrap();
-        $this->em = $bootstrap->createEntityManager($dbParams);
-
+        $this->em = $em;
         $this->generator = Factory::create();
     }
 
@@ -39,12 +36,12 @@ class EntityPopulator
             'name' => function () use ($nameReducer) {
                 $name = $this->generator->firstName;
                 while (array_reduce(str_split(strtolower($name)), $nameReducer) < 3) {
-                    $name = $this->generator->firstName;
+                    $name = $this->generator->unique()->firstName;
                 }
                 return $name;
             },
             'dimensions' => function () {
-                [
+                return [
                     $this->generator->randomNumber(3),
                     $this->generator->randomNumber(3),
                     $this->generator->randomNumber(3)
@@ -74,7 +71,7 @@ class EntityPopulator
         $specialInstructions = $this->getspecialInstructions();
         $instructionKeys = array_keys($specialInstructions);
         foreach ($instructionKeys as &$instructionKey) {
-            if (!array_search($instructionKey, $fieldNames)) {
+            if (!in_array($instructionKey, $fieldNames)) {
                 unset($specialInstructions[$instructionKey]);
             }
         }

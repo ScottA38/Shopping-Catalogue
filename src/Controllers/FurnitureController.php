@@ -6,7 +6,7 @@ namespace WebApp\Controllers;
 
 use WebApp\Bootstrap;
 
-class FurnitureController
+class FurnitureController implements IProductController
 {
 
     public function __construct()
