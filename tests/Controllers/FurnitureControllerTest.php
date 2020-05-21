@@ -11,32 +11,58 @@ use WebApp\Util\EntityPopulator;
 //bootstraps doctrine entityManager
 use WebApp\Bootstrap;
 use Doctrine\ORM\EntityManager;
+use Faker\Factory;
 
 class FurnitureControllerTest extends TestCase implements IProductControllerTest
 {
-
     protected FurnitureController $furnitureController;
 
-    //protected static EntityPopulator $entityPopulator;
+    protected array $pks;
 
     protected static EntityManager $em;
 
+    private static array $dbParams = array('url' => "mysql://dev_admin:p455w0rd@127.0.0.1:3306/my_db");
 
+    /**
+     * set up a database connection in order to seed database for tests and verify test conditions
+     */
     public static function setUpBeforeClass(): void
     {
-        $dbParams = array('url' => "mysql://dev_admin:p455w0rd@127.0.0.1:3306/my_db");
         $bootstrap = new Bootstrap();
-        FurnitureControllerTest::$em = $bootstrap->createEntityManager($dbParams);
-        //pre-populate the database with records
-        $populator = new EntityPopulator(FurnitureControllerTest::$em);
-        $populator->populate(Furniture::class, 10);
+        self::$em = $bootstrap->createEntityManager(self::$dbParams);
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        self::$em->clear();
+        self::$em->close();
+        unset(self::$em);
     }
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->furnitureController = new FurnitureController();
+        $this->furnitureController = new FurnitureController(self::$em);
+
+        //pre-populate the database with 10 records
+        $populator = new EntityPopulator(self::$em);
+        $this->pks = $populator->populate(Furniture::class, 10);
+    }
+
+    /**
+     * Empty Furniture table again ready for fresh re-population
+     * {@inheritDoc}
+     * @see \PHPUnit\Framework\TestCase::tearDown()
+     */
+    protected function tearDown(): void
+    {
+        $records = self::$em->getRepository(Furniture::class)->findAll();
+
+        foreach ($records as &$record) {
+            self::$em->remove($record);
+        }
+        assert(count(self::$em->getRepository(Furniture::class)->findAll()) === 0);
     }
 
     /**
@@ -53,7 +79,7 @@ class FurnitureControllerTest extends TestCase implements IProductControllerTest
         $id = $this->furnitureController->add($furn);
 
         //Assert - query the database to see if product has been added
-        $repo = FurnitureControllerTest::$em->getRepository(Furniture::class);
+        $repo = self::$em->getRepository(Furniture::class);
         $this->assertIsObject($repo->find($id));
     }
 
@@ -62,13 +88,17 @@ class FurnitureControllerTest extends TestCase implements IProductControllerTest
      * {@inheritDoc}
      * @see \WebApp\Tests\Controllers\IProductControllerTest::testRemoveProduct()
      */
-    public function testRemoveProduct(string $sku)
+    public function testRemoveProduct()
     {
+        //Arrange
+        $furnPKs = $this->pks[Furniture::class];
+        $choice = $furnPKs[array_rand($furnPKs)];
+
         //Act
-        $this->furnitureController->remove($sku);
+        $this->furnitureController->remove($choice);
 
         //Assert
-        $this->assertTrue(FurnitureControllerTest::$em->find($sku) === null);
+        $this->assertTrue(self::$em->find(Furniture::class, $choice) === null);
     }
 
     /**
@@ -81,7 +111,7 @@ class FurnitureControllerTest extends TestCase implements IProductControllerTest
         $this->furnitureController->removeAll();
 
         //Assert
-        $repo = FurnitureControllerTest::$em->getRespository(Furniture::class);
+        $repo = self::$em->getRepository(Furniture::class);
         $this->assertCount(0, $repo->findAll());
     }
 
@@ -89,12 +119,18 @@ class FurnitureControllerTest extends TestCase implements IProductControllerTest
      * {@inheritDoc}
      * @see \WebApp\Tests\Controllers\IProductControllerTest::testUpdatePrice()
      */
-    public function testUpdatePrice(string $sku, float $price)
+    public function testUpdatePrice()
     {
+        //Arrange
+        $furnPKs = $this->pks[Furniture::class];
+        $choice = $this->pks[array_rand($this->pks)];
+        $generator = Factory::create();
+        $newPrice = $generator->randomNumber(5);
+
         //Act
-        $this->furnitureController->updatePrice($sku, $price);
+        $this->furnitureController->updatePrice($choice, $newPrice);
 
         //Assert
-        $this->assertEquals($price, FurnitureControllerTest::$em->find($sku)->getPrice());
+        $this->assertEquals($newPrice, self::$em->find(Furniture::class, $choice)->getPrice());
     }
 }

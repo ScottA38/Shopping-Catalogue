@@ -34,9 +34,9 @@ class EntityPopulator
                 return $this->generator->randomFloat(2, 0, 10000);
             },
             'name' => function () use ($nameReducer) {
-                $name = $this->generator->firstName;
+                $name = $this->generator->unique()->company;
                 while (array_reduce(str_split(strtolower($name)), $nameReducer) < 3) {
-                    $name = $this->generator->unique()->firstName;
+                    $name = $this->generator->unique()->company;
                 }
                 return $name;
             },
@@ -75,7 +75,7 @@ class EntityPopulator
                 unset($specialInstructions[$instructionKey]);
             }
         }
-        $populator = new Populator($this->generator, $this->em);
+        $populator = new Populator($this->generator, $this->em, 5);
         $populator->addEntity($className, $amount, $specialInstructions);
         return $populator->execute();
     }
@@ -87,8 +87,7 @@ class EntityPopulator
     public function removeAllEntities(array $entities)
     {
         foreach ($entities as &$ent) {
-            $id = $this->em->getReference(get_class($ent), $ent->getSku());
-            $this->em->remove($id);
+            $this->em->remove($ent);
         }
         $this->em->flush();
     }

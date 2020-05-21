@@ -17,9 +17,9 @@ interface IProductControllerTest
     public function testAddProduct(string $name, float $price, $special);
 
     /**
-     * Product can be removed from database successfully and cleanly
+     * Product can be removed from database successfully and cleanly. Should select from
      */
-    public function testRemoveProduct(string $sku);
+    public function testRemoveProduct();
 
 
     /**
@@ -31,5 +31,5 @@ interface IProductControllerTest
      * The user can update the price of a specific product
      * @param mixed $sku
      */
-    public function testUpdatePrice(string $sku, float $price);
+    public function testUpdatePrice();
 }
