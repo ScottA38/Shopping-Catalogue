@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace WebApp;
 
 use Doctrine\ORM\Id\AbstractIdGenerator;
-use WebApp\Models\Product;
 use Doctrine\ORM\EntityManager;
 
 class SkuGenerator extends AbstractIdGenerator
@@ -28,10 +27,20 @@ class SkuGenerator extends AbstractIdGenerator
         $categoryInitialism = SkuGenerator::initialismGenerator($className, 2);
         $nameInitialism = SkuGenerator::initialismGenerator($entity->getName(), 3);
 
-        $num = count($em->getRepository(get_class($entity))->findBy(['name' => $entity->getName()])) + 1;
-
-        return $nameInitialism . $num . $categoryInitialism;
+        //working sku until no collisions
+        $sku = "";
+        $num = 1;
+        $count = count($em->getRepository(get_class($entity))->findAll());
+        while ($num <= ($count + 1)) {
+            $sku = $nameInitialism . $num . $categoryInitialism;
+            if (count($em->getRepository(get_class($entity))->findBy(['sku' => $sku])) === 0) {
+                break;
+            }
+            $num++;
+        }
+        return $sku;
     }
+
 
     /**
      * Returns the first `$length` consonants of a string in lowercases

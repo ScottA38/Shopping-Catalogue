@@ -7,7 +7,8 @@ namespace WebApp\Tests\Controllers;
 use PHPUnit\Framework\TestCase;
 use WebApp\Controllers\FurnitureController;
 use WebApp\Models\Furniture;
-use WebApp\Util\EntityPopulator;
+use WebApp\Tests\Models\FurnitureTest;
+use WebApp\Util\ProductPopulator;
 //bootstraps doctrine entityManager
 use WebApp\Bootstrap;
 use Doctrine\ORM\EntityManager;
@@ -36,7 +37,6 @@ class FurnitureControllerTest extends TestCase implements IProductControllerTest
     {
         self::$em->clear();
         self::$em->close();
-        unset(self::$em);
     }
 
     protected function setUp(): void
@@ -46,7 +46,7 @@ class FurnitureControllerTest extends TestCase implements IProductControllerTest
         $this->furnitureController = new FurnitureController(self::$em);
 
         //pre-populate the database with 10 records
-        $populator = new EntityPopulator(self::$em);
+        $populator = new ProductPopulator(self::$em);
         $this->pks = $populator->populate(Furniture::class, 10);
     }
 
@@ -57,26 +57,20 @@ class FurnitureControllerTest extends TestCase implements IProductControllerTest
      */
     protected function tearDown(): void
     {
-        $records = self::$em->getRepository(Furniture::class)->findAll();
-
-        foreach ($records as &$record) {
-            self::$em->remove($record);
-        }
+        $className = Furniture::class;
+        self::$em->createQuery("DELETE FROM $className")->execute();
         assert(count(self::$em->getRepository(Furniture::class)->findAll()) === 0);
     }
 
     /**
      * {@inheritDoc}
      * @see \WebApp\Tests\Controllers\IProductControllerTest::testAddProduct()
-     * @dataProvider validFurnitureConstructorArgumentProvider
+     * @dataProvider furnitureValidArgs
      */
     public function testAddProduct(string $name, float $price, $dimensions)
     {
-        //Arrange
-        $furn = new Furniture($name, $price, $dimensions);
-
         //Act
-        $id = $this->furnitureController->add($furn);
+        $id = $this->furnitureController->add($name, $price, $dimensions);
 
         //Assert - query the database to see if product has been added
         $repo = self::$em->getRepository(Furniture::class);
@@ -123,7 +117,7 @@ class FurnitureControllerTest extends TestCase implements IProductControllerTest
     {
         //Arrange
         $furnPKs = $this->pks[Furniture::class];
-        $choice = $this->pks[array_rand($this->pks)];
+        $choice = $furnPKs[array_rand($furnPKs)];
         $generator = Factory::create();
         $newPrice = $generator->randomNumber(5);
 
@@ -131,6 +125,15 @@ class FurnitureControllerTest extends TestCase implements IProductControllerTest
         $this->furnitureController->updatePrice($choice, $newPrice);
 
         //Assert
-        $this->assertEquals($newPrice, self::$em->find(Furniture::class, $choice)->getPrice());
+        $this->assertEquals($newPrice, self::$em->find(Furniture::class, $choice->getSku())->getPrice());
+    }
+
+    /**
+     * Get constructor arguments from model test
+     * @return string[][]|number[][]|number[][][]
+     */
+    public static function furnitureValidArgs()
+    {
+        return FurnitureTest::validConstructorArgumentProvider();
     }
 }

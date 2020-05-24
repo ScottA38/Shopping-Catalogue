@@ -4,13 +4,32 @@ declare(strict_types=1);
 
 namespace WebApp\Tests\Models;
 
+use Doctrine\ORM\EntityManager;
 use PHPUnit\Framework\TestCase;
 use WebApp\Models\Furniture;
+use WebApp\Bootstrap;
 
 class FurnitureTest extends TestCase implements IProductTest
 {
 
     protected ?Furniture $furniture;
+
+    protected static EntityManager $em;
+
+    private static array $dbParams = array('url' => "mysql://dev_admin:p455w0rd@127.0.0.1:3306/my_db");
+
+
+    public static function setUpBeforeClass(): void
+    {
+        $bootstrap = new Bootstrap();
+        self::$em = $bootstrap->createEntityManager(self::$dbParams);
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        self::$em->clear();
+        self::$em->close();
+    }
 
     /**
     * Instantiate an instances of Furniture for use with test methods
@@ -19,15 +38,28 @@ class FurnitureTest extends TestCase implements IProductTest
     {
         parent::setUp();
         $args = $this->getProvidedData();
-        //var_dump($args);
 
-        if (count($args) !== 3) {
-            $this->furniture = null;
-        } else {
+        if (count($args) === 3) {
             $this->furniture = new Furniture(...$args);
-            $this->seedId($this->furniture);
+            self::$em->persist($this->furniture);
+            self::$em->flush();
+        } else {
+            $this->furniture = null;
         }
     }
+
+    /**
+     * Empty Furniture table
+     * {@inheritDoc}
+     * @see \PHPUnit\Framework\TestCase::tearDown()
+     */
+    protected function tearDown(): void
+    {
+        $className = Furniture::class;
+        self::$em->createQuery("DELETE FROM $className")->execute();
+        assert(count(self::$em->getRepository(Furniture::class)->findAll()) === 0);
+    }
+
 
     /**
     * Ensure Furniture constructor creates instance with valid args
@@ -64,8 +96,8 @@ class FurnitureTest extends TestCase implements IProductTest
         //Arrange
         $dataProvider = $this->validConstructorArgumentProvider()[0];
         $furnitureTwo = new Furniture($dataProvider[0], $dataProvider[1], $dataProvider[2]);
-        //seed a random Id number in order to test SKU-related functionality
-        $this::seedId($furnitureTwo);
+        self::$em->persist($furnitureTwo);
+        self::$em->flush();
 
         //Assert
         $this->assertTrue(!$this->furniture->compareTo($furnitureTwo));
@@ -182,7 +214,7 @@ class FurnitureTest extends TestCase implements IProductTest
     {
         return [
             //Invalid product name (must have more than 2 consonants in the string)
-            ["It", 60.0, [120, 50, 70], 'LengthException'],
+            ["It", 60.0, [], 'LengthException'],
             //Invalid number of arguments
             //[70.0, [60, 120, 210], \ArgumentCountError::class],
             //SKU formatting error
@@ -192,18 +224,5 @@ class FurnitureTest extends TestCase implements IProductTest
             //Dimensions in invalid format
             ["Lamp Shade", 9.0, [4], 'LengthException']
         ];
-    }
-
-
-    /**
-     * mock the id number in the class in order to make SKU-related functions work
-     * @param Furniture
-     */
-    public static function seedId(Furniture $obj)
-    {
-        $refCls = new \ReflectionObject($obj);
-        $refProp = $refCls->getProperty('id');
-        $refProp->setAccessible(true);
-        $refProp->setValue($obj, random_int(0, 1200));
     }
 }

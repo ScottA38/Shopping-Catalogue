@@ -10,7 +10,7 @@ use Faker\Factory;
 use WebApp\Models\Product;
 use Faker\Generator;
 
-class EntityPopulator
+class ProductPopulator
 {
     private EntityManager $em;
     private Generator $generator;
@@ -46,10 +46,8 @@ class EntityPopulator
                     $this->generator->randomNumber(3),
                     $this->generator->randomNumber(3)
                 ];
-            },
-            'release' => function () {
             }
-            ];
+        ];
     }
 
     public function getEntityManager(): EntityManager
@@ -75,8 +73,8 @@ class EntityPopulator
                 unset($specialInstructions[$instructionKey]);
             }
         }
-        $populator = new Populator($this->generator, $this->em, 5);
-        $populator->addEntity($className, $amount, $specialInstructions);
+        $populator = new Populator($this->generator, $this->em, 1);
+        $populator->addEntity($className, $amount, $specialInstructions, [], false);
         return $populator->execute();
     }
 

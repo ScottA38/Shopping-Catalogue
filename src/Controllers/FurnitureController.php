@@ -23,11 +23,13 @@ class FurnitureController implements IProductController
         $furn = new Furniture($name, $price, $dimensions);
         $this->em->persist($furn);
         $this->em->flush();
+        return $furn->getSku();
     }
 
     public function remove($sku): void
     {
-        $this->em->remove($sku);
+        $target = $this->em->find(Furniture::class, $sku);
+        $this->em->remove($target);
         $this->em->flush();
     }
 
