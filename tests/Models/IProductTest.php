@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace WebApp\Tests;
+namespace WebApp\Tests\Models;
 
 /**
-* Abstract base Test class which outlines testing contract for classes implementing iProduct
+* Interface outlining basic testing contract for tests which test a 'Product' object base class
 */
 interface IProductTest
 {
     /**
-    * Test t    hat extended product can be created with valid arguments.
+    * Test that product can be created with valid arguments.
     * N.B: The 'special' attribute refers to an additional argument expected for each implementor of
     */
     public function testCanBeInstantiatedWithValidConstructorArgs(string $name, float $price, array $special);

@@ -2,15 +2,16 @@
 
 /* Config file to connect DBAL EntityManager instance ( from ./bootstrap.php ) to ./vendor/bin/doctrine
 such that CLI commands can be used
-
-adopted from https://www.doctrine-project.org/projects/doctrine-orm/en/current/reference/configuration.html
 */
 
+require_once __DIR__ . '/vendor/autoload.php';
+
 use Doctrine\ORM\Tools\Console\ConsoleRunner;
+use WebApp\Bootstrap;
 
-$bootstrap = 'bootstrap.php';
-
-require_once $bootstrap;
+$dbParams = array('url' => "mysql://dev_admin:p455w0rd@127.0.0.1:3306/my_db");
+$bootstrap = new Bootstrap();
+$entityManager = $bootstrap->createEntityManager($dbParams);
 
 //checking for existence of $entityManager variable from $bootstrap's php file execution
 if (isset($entityManager)) {

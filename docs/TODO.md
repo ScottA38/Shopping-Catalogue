@@ -1,7 +1,7 @@
 # **TODO** ~> Required learning before structuring project / writing PHP code / programming or modifying MYSQL
 
 * ## PHPUnit - unit testing in PHP
-	* Learn how to use PHPUnit library in order to test all OO code
+	* ~~Learn how to use PHPUnit library in order to test all OO code~~
 
 * ## Coding standards
 	* ~~Read in detail about [PSR-4](https://www.php-fig.org/psr/) and how to adhere to this coding specification~~ _Using [`phpcs`](https://packagist.org/packages/squizlabs/php_codesniffer) to help lint code then fix manually_
@@ -26,10 +26,10 @@
 * ## MYSQL data
 	* Find out how to include sample MYSQL data in docker build
 		* Explore [`fzaninotto/faker`](https://packagist.org/packages/fzaninotto/faker) to see if a database seeder is possible OR
-		* Use '[Maximilian Schwarzmuller's project](https://github.com/mschwarzmueller/laravel-shopping-cart-tutorial)' as a reference and use the same implementation if `Illuninate` library can be used
+		* ~~Use '[Maximilian Schwarzmuller's project](https://github.com/mschwarzmueller/laravel-shopping-cart-tutorial)' as a reference and use the same implementation if `Illuninate` library can be used~~ _too tied to laravel_
 	* Find an appropriate ORM to use
 		* Options:
-			* Propel (in alpha)
+			* ~~Propel (in alpha)~~
 	* Consider using DB abstraction layer (e.g: [Doctrine2 DBAL](https://www.doctrine-project.org/projects/dbal.html))
 
 * ## View templating
