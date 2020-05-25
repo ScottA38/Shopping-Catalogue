@@ -10,7 +10,6 @@ namespace WebApp\Tests\Controllers;
  */
 interface IProductControllerTest
 {
-
     /**
      * Product can be added to database successfully
      */
@@ -32,4 +31,15 @@ interface IProductControllerTest
      * @param mixed $sku
      */
     public function testUpdatePrice();
+
+    /**
+     * Test that can search for and return a specific sku
+     * @return array
+     */
+    public function testShowOne();
+    /**
+     * test that can return all entities of the controller type
+     * @return array
+     */
+    public function testShowAll();
 }
