@@ -65,7 +65,7 @@ class FurnitureControllerTest extends TestCase implements IProductControllerTest
     /**
      * {@inheritDoc}
      * @see \WebApp\Tests\Controllers\IProductControllerTest::testAddProduct()
-     * @dataProvider furnitureValidArgs
+     * @dataProvider furnitureValidArgsProvider
      */
     public function testAddProduct(string $name, float $price, $dimensions)
     {
@@ -84,15 +84,14 @@ class FurnitureControllerTest extends TestCase implements IProductControllerTest
      */
     public function testRemoveProduct()
     {
-        //Arrange
-        $furnPKs = $this->pks[Furniture::class];
-        $choice = $furnPKs[array_rand($furnPKs)];
+        //Arrange - subsitute for dataProvider
+        $sku = $this->randomSkuProvider();
 
         //Act
-        $this->furnitureController->remove($choice);
+        $this->furnitureController->remove($sku);
 
         //Assert
-        $this->assertTrue(self::$em->find(Furniture::class, $choice) === null);
+        $this->assertTrue(self::$em->find(Furniture::class, $sku) === null);
     }
 
     /**
@@ -116,24 +115,57 @@ class FurnitureControllerTest extends TestCase implements IProductControllerTest
     public function testUpdatePrice()
     {
         //Arrange
-        $furnPKs = $this->pks[Furniture::class];
-        $choice = $furnPKs[array_rand($furnPKs)];
+        $sku = $this->randomSkuProvider();
         $generator = Factory::create();
         $newPrice = $generator->randomNumber(5);
 
         //Act
-        $this->furnitureController->updatePrice($choice, $newPrice);
+        $this->furnitureController->updatePrice($sku, $newPrice);
 
         //Assert
-        $this->assertEquals($newPrice, self::$em->find(Furniture::class, $choice->getSku())->getPrice());
+        $this->assertEquals($newPrice, self::$em->find(Furniture::class, $sku)->getPrice());
+    }
+
+    /**
+     * {@inheritDoc}
+     * @see \WebApp\Tests\Controllers\IProductControllerTest::testShowOne()
+     */
+    public function testShowOne()
+    {
+        //Arrange
+        $sku = $this->randomSkuProvider();
+
+        //Act
+        $obj = $this->furnitureController->get($sku);
+
+        //Assert
+        $this->assertInstanceOf(Furniture::class, $obj);
+        $this->assertSame($sku, $obj->getSku());
+    }
+
+    public function testShowAll()
+    {
+        //Act
+        $objs = $this->furnitureController->getAll();
+
+        //Assert
+        $this->assertCount(count($objs), self::$em->getRepository(Furniture::class)->findAll());
+        //shortcut to testing member types of array
+        $this->assertSame(Furniture::class, get_class($objs[0]));
     }
 
     /**
      * Get constructor arguments from model test
      * @return string[][]|number[][]|number[][][]
      */
-    public static function furnitureValidArgs()
+    public function furnitureValidArgsProvider()
     {
         return FurnitureTest::validConstructorArgumentProvider();
+    }
+
+    public function randomSkuProvider(): string
+    {
+        $furnPKs = $this->pks[Furniture::class];
+        return $furnPKs[array_rand($furnPKs)]->getSku();
     }
 }

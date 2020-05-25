@@ -26,11 +26,12 @@ class FurnitureController implements IProductController
         return $furn->getSku();
     }
 
-    public function remove($sku): void
+    public function remove(string $sku): Furniture
     {
         $target = $this->em->find(Furniture::class, $sku);
         $this->em->remove($target);
         $this->em->flush();
+        return $target;
     }
 
     public function removeAll(): array
@@ -47,5 +48,15 @@ class FurnitureController implements IProductController
     {
         $target = $this->em->find(Furniture::class, $sku);
         $target->setPrice($price);
+    }
+
+    public function get(string $sku): Furniture
+    {
+        return $this->em->find(Furniture::class, $sku);
+    }
+
+    public function getAll(): array
+    {
+        return $this->em->getRepository(Furniture::class)->findAll();
     }
 }
