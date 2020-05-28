@@ -8,7 +8,7 @@ use Doctrine\ORM\EntityManager;
 use WebApp\Models\Product;
 
 /**
- * Basic interface to cover the core functionality a product Controller should implement
+ * Base class to cover the core functionality a product Controller should implement
  */
 abstract class ProductController implements IProductController
 {
@@ -66,5 +66,10 @@ abstract class ProductController implements IProductController
     public function getFieldMap(): array
     {
         return $this->em->getClassMetadata($this->model)->fieldMappings;
+    }
+
+    public function getModelName(): string
+    {
+        return $this->model;
     }
 }

@@ -22,4 +22,8 @@ interface IProductController
     public function get(string $sku): Product;
 
     public function getAll(): array;
+
+    public function getFieldMap(): array;
+
+    public function getModelName(): string;
 }

@@ -167,6 +167,20 @@ class FurnitureControllerTest extends TestCase implements IProductControllerTest
     }
 
     /**
+     * Ensures that class name returned is valid in ORM
+     */
+    public function testGetModelNameReturnsManagedEntity()
+    {
+        //Act
+        $name = $this->furnitureController->getModelName();
+
+        //Assert
+        $this->assertTrue(class_exists($name));
+        $this->assertIsArray(self::$em->getRepository($name)->findAll());
+    }
+
+
+    /**
      * Get constructor arguments from model test
      * @return string[][]|number[][]|number[][][]
      */
