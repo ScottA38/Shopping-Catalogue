@@ -10,7 +10,7 @@ use WebApp\Models\Product;
 /**
  * Basic interface to cover the core functionality a product Controller should implement
  */
-abstract class ProductController
+abstract class ProductController implements IProductController
 {
     protected EntityManager $em;
 
@@ -61,5 +61,10 @@ abstract class ProductController
     public function getAll(): array
     {
         return $this->em->getRepository($this->model)->findAll();
+    }
+
+    public function getFieldMap(): array
+    {
+        return $this->em->getClassMetadata($this->model)->fieldMappings;
     }
 }

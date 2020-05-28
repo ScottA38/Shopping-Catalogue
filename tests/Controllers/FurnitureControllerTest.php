@@ -126,6 +126,18 @@ class FurnitureControllerTest extends TestCase implements IProductControllerTest
         $this->assertEquals($newPrice, self::$em->find(Furniture::class, $sku)->getPrice());
     }
 
+    public function testGetFieldMapping()
+    {
+        //Act
+        $fieldMap = $this->furnitureController->getFieldMap();
+
+        //Assert
+        $this->assertArrayHasKey("sku", $fieldMap);
+        $this->assertArrayHasKey("price", $fieldMap);
+        $this->assertArrayHasKey("name", $fieldMap);
+        $this->assertArrayHasKey("dimensions", $fieldMap);
+    }
+
     /**
      * {@inheritDoc}
      * @see \WebApp\Tests\Controllers\IProductControllerTest::testShowOne()
