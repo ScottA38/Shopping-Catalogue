@@ -9,7 +9,7 @@
 
 - [x] Research into/decide whether the view can be polymorphic (supports display of objects regardless of type)
 ~~- [ ] Implement tests~~~ - will not be tested as it is UI
-- [ ] Implement `ProductView` view base class
+- [x] Implement `ProductView` view base class
 
 ## Webpages
 
@@ -19,11 +19,14 @@
 
 - [ ] Work out what the hierarchy of files should be and where to add my webpage files such that it functions correctly on Apache (**i.e:** `/var/www/src/html`?)
 - [ ] Implement 'require' statement for autoloader on necessary files for server deployment (likely to be 'View' files)
+- [ ] Integrate `twig` into the project's composer
+	- [ ] Add `src/html` dir
+		- [ ] Produce some html templates and construct page drafts using twig
 
 ## Version Control
 
-- [ ] - Change 'Furniture_controller' branch to 'Furniture_presenter'
-	- [ ] - rename all relevant classes relating to 'controller'
-		- [ ] - **IMPORTANT** ensure that all PHPUnit tests still run
-- [ ] - Add `getFieldMap()` to `IProductController` interface
-- [ ] - pull all changes listed above over to `Furniture_view` and squash into previous cherry_pick commit
+- [ ] - ~~Change 'Furniture_controller' branch to 'Furniture_presenter'~~ *Introduces unexpected PHPUnit changes and agony with git*
+	- [ ] - ~~rename all relevant classes relating to 'controller'~~
+		- [ ] - ~~**IMPORTANT** ensure that all PHPUnit tests still run~~
+- [x] - Add `getFieldMap()` to `IProductController` interface
+- [x] - pull all changes listed above over to `Furniture_view` and squash into previous cherry_pick commit - *Didn't squash*
