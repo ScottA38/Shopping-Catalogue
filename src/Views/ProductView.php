@@ -4,60 +4,83 @@ declare(strict_types=1);
 
 namespace WebApp\Views;
 
-use Doctrine\ORM\EntityManager;
 use WebApp\Bootstrap;
 use WebApp\Models\Product;
+use WebApp\Controllers\ProductController;
 
-class ProductView
+abstract class ProductView implements IProductView
 {
-    protected array $controllers = [];
+    /**
+     * This property must be initialised for each concrete instance of this base class
+     * @var ProductController
+     */
+    protected ProductController $controller;
+
+    protected array $formTypeMappings = [
+        "string" => "type='text'",
+        "integer" => "type='number' step='1'",
+        "float" => "type=number step='0.01'"
+    ];
 
     /**
      * Generic product viewing class asks for fully qualified class names of defined controllers
      * @param array $controllerNames
      */
-    public function __construct(array $dbParams, string $classPath = "\\WebApp\Controllers\\")
+    public function __construct(ProductController $controller)
     {
-        $bootstrap = new Bootstrap();
-        $em = $bootstrap->createEntityManager($dbParams);
-
-        $classNames = array_map(function ($meta) {
-            return $meta->getName();
-        }, $em->getMetadataFactory()->getAllMetadata());
-
-        foreach ($classNames as &$className) {
-            $nss = str_split($className);
-            $controllerPath = $classPath . end($nss);
-            //assured that all controller only take entityManager as single argument
-            array_push($this->controllers, new $controllerPath($em));
-        }
+        $this->controller = $controller;
     }
 
+    /**
+     * Function to build all cards which display products for a specific type
+     * @return array
+     */
     public function displayAll()
     {
         $output = [];
-        foreach ($this->controllers as &$controller) {
-            $insts = $controller->getAll();
-            foreach ($insts as &$inst) {
-                array_push($output, self::buildCard($inst));
-            }
+        $insts = $this->controller->getAll();
+        foreach ($insts as &$inst) {
+            array_push($output, self::buildCard($inst));
         }
         return $output;
     }
 
-    protected static function buildCard(Product $entity, array $fieldMap)
+    protected function buildCard(Product $entity)
     {
-        $nSs = str_split(get_class($entity));
+        $nSs = explode("\\", get_class($entity));
         $className = end($nSs);
         $cardHeader = "<div id='{$entity->getSku()}'class='card'>
                     <img src='...' class='card-img-top'>
                     <div class='card-body'>
                         <h5 class='card-title'>$className</h5>";
-        $cardFooter = "<a href='TODO' class='btn btn-primary>Delete Item</a></div?</div>";
+        $cardFooter = "<a href='#' class='btn btn-primary>Delete Item</a></div?</div>";
         $content = "";
-        foreach ($fieldMap as &$field) {
+        foreach ($this->controller->getFieldMap() as &$field) {
             $content .= "<p class='card-text'>{$entity->get{$field}()}</p>";
         }
         return $cardHeader . $content . $cardFooter;
+    }
+
+    public function displayForm()
+    {
+        $formHeader = "<form action='TODO' method='#'>";
+        $formFields = "";
+        $formFooter = "</form>";
+        foreach (array_values($this->controller->getFieldMap()) as $fieldConfig) {
+            $formFields .= $this->makeFormField($fieldConfig);
+        }
+        return $formHeader . $formFields . $formFooter;
+    }
+
+    protected function makeFormField(array $fieldConfig)
+    {
+        if ($fieldConfig['type'] === "array") {
+            throw new \Exception('array form field generator not yet implemented');
+        }
+        $inputName = $fieldConfig['fieldName'] . "Input";
+        return "<div class='form-group'>
+                    <label for='$inputName'>{$fieldConfig['fieldName']}</label>
+                    <input {$this->formTypeMappings[$fieldConfig]} class='form-control id=$inputName>
+                </div>";
     }
 }
