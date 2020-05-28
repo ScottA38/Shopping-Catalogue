@@ -24,4 +24,6 @@ interface IProductController
     public function getAll(): array;
 
     public function getFieldMap(): array;
+
+    public function getModelName(): string;
 }
