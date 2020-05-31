@@ -7,6 +7,8 @@ namespace WebApp\Views;
 use WebApp\Bootstrap;
 use WebApp\Models\Product;
 use WebApp\Controllers\ProductController;
+use Doctrine\ORM\EntityManager;
+use WebApp\Controllers\IProductController;
 
 abstract class ProductView implements IProductView
 {
@@ -21,15 +23,6 @@ abstract class ProductView implements IProductView
         "integer" => "type='number' step='1'",
         "float" => "type=number step='0.01'"
     ];
-
-    /**
-     * Generic product viewing class asks for fully qualified class names of defined controllers
-     * @param array $controllerNames
-     */
-    public function __construct(ProductController $controller)
-    {
-        $this->controller = $controller;
-    }
 
     /**
      * Function to build all cards which display products for a specific type
