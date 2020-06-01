@@ -20,7 +20,7 @@ services:
     build:
       context: ./
     volumes:
-      - /Users/ScottAnderson/tech/commissions/shopping_app_test/src/:/var/www/html/
+      - ${PWD}:/var/www/
     ports:
       - 8000:80
     depends_on:
