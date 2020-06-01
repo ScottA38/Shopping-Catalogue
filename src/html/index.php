@@ -13,12 +13,14 @@ switch ($request) {
         require __DIR__ . '/views/index.php';
         break;
     case ' ':
-        require __DIR__ . 'views/index.php';
+        require __DIR__ . '/views/index.php';
         break;
+    /**
     case '/add_product':
-        require __DIR__ . 'views/new_product.php';
+        require __DIR__ . '/views/new_product.php';
         break;
+    */
     default:
         http_response_code(404);
-        require __DIR__ . 'views/404.php';
+        require __DIR__ . '/views/404.php';
 }
