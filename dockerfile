@@ -13,8 +13,12 @@ RUN a2enmod rewrite
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
 RUN php composer-setup.php --install-dir=/usr/local/bin/ --filename=composer
 
+#setup database secrets file
+COPY db_secret.prod.php /etc/db_secret.prod.php
+
 #copy across necessary files
 COPY . /var/www/
+RUN rm /var/www/db_secret.prod.php
 
 #change root that server runs files from
 RUN sed -i 's+/var/www/html+/var/www/src/html+i' /etc/apache2/sites-available/000-default.conf
