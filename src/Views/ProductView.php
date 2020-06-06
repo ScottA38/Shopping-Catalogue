@@ -12,6 +12,8 @@ use WebApp\Controllers\IProductController;
 
 abstract class ProductView implements IProductView
 {
+    protected array $arrayFormDefinitions;
+
     /**
      * This property must be initialised for each concrete instance of this base class
      * @var ProductController
@@ -21,8 +23,16 @@ abstract class ProductView implements IProductView
     protected array $formTypeMappings = [
         "string" => "type='text'",
         "integer" => "type='number' step='1'",
-        "float" => "type=number step='0.01'"
+        "decimal" => "type='number' step='0.01'"
     ];
+
+    /**
+     * Abstract constructor to ensure specific properties are initialised
+     */
+    public function __construct()
+    {
+        assert(isset($this->arrayFormDefinitions));
+    }
 
     /**
      * Function to build all cards which display products for a specific type
@@ -65,6 +75,7 @@ abstract class ProductView implements IProductView
         $formFields = "";
         $formFooter = "</form>";
         foreach (array_values($this->controller->getFieldMap()) as $fieldConfig) {
+            //var_dump($fieldConfig);
             $formFields .= $this->makeFormField($fieldConfig);
         }
         return $formHeader . $formFields . $formFooter;
@@ -72,13 +83,26 @@ abstract class ProductView implements IProductView
 
     protected function makeFormField(array $fieldConfig)
     {
-        if ($fieldConfig['type'] === "array") {
-            throw new \Exception('array form field generator not yet implemented');
-        }
+        $formHeader = "<div class='form-group'>";
+        $inputs = "";
+        $formFooter = "</div>";
+        //identifier name in form inputs
         $inputName = $fieldConfig['fieldName'] . "Input";
-        return "<div class='form-group'>
-                    <label for='$inputName'>{$fieldConfig['fieldName']}</label>
-                    <input {$this->formTypeMappings[$fieldConfig]} class='form-control id=$inputName>
-                </div>";
+        if ($fieldConfig['type'] === "array") {
+            //sanity check that this array type is defined for the [entityType]View class
+            assert(isset($this->arrayFormDefinitions[$fieldConfig['fieldName']]));
+            //get member information for specific array type field
+            $arrayFieldDefinition = $this->arrayFormDefinitions[$fieldConfig['fieldName']];
+            $membersTypeMapping = $this->formTypeMappings[$arrayFieldDefinition['membersType']];
+            for ($i = 0; $i < $arrayFieldDefinition['length']; $i++) {
+                $inputs .= "<label for='$inputName\[]'>{$fieldConfig['fieldName']}</label>
+            <input $membersTypeMapping class='form-control id='$inputName\[]'>";
+            }
+        } else {
+            $inputs = "<label for='$inputName'>{$fieldConfig['fieldName']}</label>
+            <input {$this->formTypeMappings[$fieldConfig['type']]} class='form-control id=$inputName>";
+        }
+
+        return $formHeader . $inputs . $formFooter;
     }
 }
