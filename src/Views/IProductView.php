@@ -15,7 +15,7 @@ interface IProductView
      * Generates html 'cards' based upon data in ORM for a specific controlled type
      * @return string
      */
-    public function displayAll(): string;
+    public function displayAll(): array;
 
     /**
      * Method which generates a form for given ORM model data blueprint

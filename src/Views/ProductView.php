@@ -28,7 +28,7 @@ abstract class ProductView implements IProductView
      * Function to build all cards which display products for a specific type
      * @return array
      */
-    public function displayAll()
+    public function displayAll(): array
     {
         $output = [];
         $insts = $this->controller->getAll();
@@ -49,12 +49,17 @@ abstract class ProductView implements IProductView
         $cardFooter = "<a href='#' class='btn btn-primary>Delete Item</a></div?</div>";
         $content = "";
         foreach ($this->controller->getFieldMap() as &$field) {
-            $content .= "<p class='card-text'>{$entity->get{$field}()}</p>";
+            $methodName = "get" . $field['fieldName'];
+            $value = $entity->$methodName();
+            if (gettype($value) === 'array') {
+                $value = implode(", ", $value);
+            }
+            $content .= "<p class='card-text'>$value</p>";
         }
         return $cardHeader . $content . $cardFooter;
     }
 
-    public function displayForm()
+    public function displayForm(): string
     {
         $formHeader = "<form action='TODO' method='#'>";
         $formFields = "";
