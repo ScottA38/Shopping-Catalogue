@@ -37,11 +37,9 @@ switch ($request) {
     case '/phpinfo':
         phpinfo();
         break;
-    /**
     case '/add_product':
-        require __DIR__ . '/views/new_product.php';
+        require __DIR__ . '/views/add_product.php';
         break;
-    */
     default:
         http_response_code(404);
         require __DIR__ . '/views/404.php';
