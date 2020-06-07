@@ -65,7 +65,9 @@ abstract class ProductController implements IProductController
 
     public function getFieldMap(): array
     {
-        return $this->em->getClassMetadata($this->model)->fieldMappings;
+        $fieldMap = $this->em->getClassMetadata($this->model)->fieldMappings;
+        unset($fieldMap['sku']);
+        return $fieldMap;
     }
 
     public function getModelName(): string

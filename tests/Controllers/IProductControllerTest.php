@@ -37,9 +37,13 @@ interface IProductControllerTest
      * @return array
      */
     public function testShowOne();
+
     /**
      * test that can return all entities of the controller type
      * @return array
      */
     public function testShowAll();
+
+
+    public function testGetFieldMapping();
 }

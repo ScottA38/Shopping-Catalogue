@@ -132,10 +132,19 @@ class FurnitureControllerTest extends TestCase implements IProductControllerTest
         $fieldMap = $this->furnitureController->getFieldMap();
 
         //Assert
-        $this->assertArrayHasKey("sku", $fieldMap);
+        //$this->assertArrayHasKey("sku", $fieldMap);
         $this->assertArrayHasKey("price", $fieldMap);
         $this->assertArrayHasKey("name", $fieldMap);
         $this->assertArrayHasKey("dimensions", $fieldMap);
+    }
+
+    public function testFieldMappingDoesNotHaveSku()
+    {
+        //Act
+        $fieldMap = $this->furnitureController->getFieldMap();
+
+        //Assert
+        $this->assertArrayNotHasKey('sku', $fieldMap);
     }
 
     /**
