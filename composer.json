@@ -5,7 +5,7 @@
 		"fzaninotto/faker": "~1.9"
 	},
 	"require": {
-		"doctrine/orm": "~2.7"
+		"doctrine/orm": "2.7.2"
 	},
 	"autoload" : {
 		"psr-4": {
