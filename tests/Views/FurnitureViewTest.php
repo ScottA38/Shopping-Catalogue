@@ -44,6 +44,7 @@ class FurnitureControllerTest extends TestCase implements IProductViewTest
 
     protected function tearDown(): void
     {
+
         $className = Furniture::class;
         self::$em->createQuery("DELETE FROM $className")->execute();
         assert(count(self::$em->getRepository(Furniture::class)->findAll()) === 0);
@@ -65,6 +66,13 @@ class FurnitureControllerTest extends TestCase implements IProductViewTest
         $output = implode($output);
         $domDoc->loadHTML($output);
 
+        $output_file = fopen("/tmp/output__" . $this->getName() . ".html", "w");
+        //use 'output' variable from testcase with html string
+        fwrite($output_file, $output);
+        if (count(libxml_get_errors()) > 0) {
+            var_dump(libxml_get_errors());
+        }
+
         //Assert
         $this->assertCount(0, libxml_get_errors());
     }
@@ -78,6 +86,13 @@ class FurnitureControllerTest extends TestCase implements IProductViewTest
         //Act
         $output = $this->furnitureView->displayForm();
         $domDoc->loadHTML($output);
+
+        $output_file = fopen("/tmp/output__" . $this->getName() . ".html", "w");
+        //use 'output' variable from testcase with html string
+        fwrite($output_file, $output);
+        if (count(libxml_get_errors()) > 0) {
+            var_dump(libxml_get_errors());
+        }
 
         //Assert
         $this->assertCount(0, libxml_get_errors());

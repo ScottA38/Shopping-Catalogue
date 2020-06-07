@@ -52,11 +52,13 @@ abstract class ProductView implements IProductView
     {
         $nSs = explode("\\", get_class($entity));
         $className = end($nSs);
-        $cardHeader = "<div id='{$entity->getSku()}'class='card'>
+        $cardHeader = "<div id='{$entity->getSku()}' class='card'>
                     <img src='...' class='card-img-top'>
                     <div class='card-body'>
                         <h5 class='card-title'>$className</h5>";
-        $cardFooter = "<a href='#' class='btn btn-primary>Delete Item</a></div?</div>";
+        $cardFooter = "<a href='#' class='btn btn-primary'>Delete Item</a>
+            </div>
+        </div>";
         $content = "";
         foreach ($this->controller->getFieldMap() as &$field) {
             $methodName = "get" . $field['fieldName'];
@@ -64,7 +66,7 @@ abstract class ProductView implements IProductView
             if (gettype($value) === 'array') {
                 $value = implode(", ", $value);
             }
-            $content .= "<p class='card-text'>$value</p>";
+            $content .= "\n<p class='card-text'>$value</p>";
         }
         return $cardHeader . $content . $cardFooter;
     }
@@ -95,12 +97,13 @@ abstract class ProductView implements IProductView
             $arrayFieldDefinition = $this->arrayFormDefinitions[$fieldConfig['fieldName']];
             $membersTypeMapping = $this->formTypeMappings[$arrayFieldDefinition['membersType']];
             for ($i = 0; $i < $arrayFieldDefinition['length']; $i++) {
-                $inputs .= "<label for='$inputName\[]'>{$fieldConfig['fieldName']}</label>
-            <input $membersTypeMapping class='form-control id='$inputName\[]'>";
+                $arrayInputName = $inputName . "[" . $i . "]";
+                $inputs .= "<label for='$arrayInputName'>{$fieldConfig['fieldName']}</label>
+            <input $membersTypeMapping class='form-control' id='$arrayInputName'>";
             }
         } else {
             $inputs = "<label for='$inputName'>{$fieldConfig['fieldName']}</label>
-            <input {$this->formTypeMappings[$fieldConfig['type']]} class='form-control id=$inputName>";
+            <input {$this->formTypeMappings[$fieldConfig['type']]} class='form-control' id=$inputName>";
         }
 
         return $formHeader . $inputs . $formFooter;
