@@ -30,4 +30,6 @@ RUN sed -i 's+/var/www/html+/var/www/src/html+i' /etc/apache2/sites-available/00
 #Install php testing
 RUN cd .. && composer update && composer install --no-dev
 
-expose 80
+RUN vendor/bin/doctrine orm:schema-tool:create
+
+EXPOSE 80

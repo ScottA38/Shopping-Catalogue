@@ -9,7 +9,15 @@ require_once __DIR__ . '/vendor/autoload.php';
 use Doctrine\ORM\Tools\Console\ConsoleRunner;
 use WebApp\Bootstrap;
 
-$dbParams = array('url' => "mysql://dev_admin:p455w0rd@127.0.0.1:3306/my_db");
+$dbParams = [];
+
+if (file_exists("/etc/db_secret.prod.php")) {
+    require_once "/etc/db_secret.prod.php";
+    $dbParams = DBPARAMS;
+} else {
+    $dbParams = array('url' => "mysql://dev_admin:p455w0rd@127.0.0.1:3306/my_db");
+}
+
 $bootstrap = new Bootstrap();
 $entityManager = $bootstrap->createEntityManager($dbParams);
 

@@ -12,9 +12,16 @@ require_once "/var/www/vendor/autoload.php";
 require_once "/etc/db_secret.prod.php";
 
 use WebApp\Bootstrap;
+use WebApp\Util\ProductPopulator;
+use WebApp\Models\Furniture;
 
+//get Doctrine entityManager
 $bootstrap = new Bootstrap();
 $em = $bootstrap->createEntityManager(DBPARAMS);
+
+//generate some Doctrine entity instances in the database
+$populator = new ProductPopulator($em);
+$populator->populate(Furniture::class, 20);
 
 //echo "This is after bootstrapping";
 
@@ -39,3 +46,7 @@ switch ($request) {
         http_response_code(404);
         require __DIR__ . '/views/404.php';
 }
+
+$className = Furniture::class;
+$query = $em->createQuery("DELETE FROM $className");
+$query->execute();
