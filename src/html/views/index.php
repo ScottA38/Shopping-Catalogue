@@ -1,3 +1,18 @@
-<?php include "templates/header.html"; ?>
-<h1>This page is yet to be implemented, products will go here<small class='text-muted'>patience is key...</small></h1>
-<?php include "templates/footer.html"?>
+<?php
+
+declare(strict_types=1);
+
+use WebApp\Views\FurnitureView;
+
+assert(isset($em), "No Doctrine entityManager initialised for the view file");
+
+include "templates/header.html";
+
+$furnView = new FurnitureView($em);
+$cards = $furnView->displayAll();
+
+foreach ($cards as &$card) {
+    echo $card;
+}
+
+include "templates/footer.html";

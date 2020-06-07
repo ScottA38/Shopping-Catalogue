@@ -6,6 +6,18 @@
 
 declare(strict_types=1);
 
+ini_set('error_log', '/var/log/php-error.log');
+
+require_once "/var/www/vendor/autoload.php";
+require_once "/etc/db_secret.prod.php";
+
+use WebApp\Bootstrap;
+
+$bootstrap = new Bootstrap();
+$em = $bootstrap->createEntityManager(DBPARAMS);
+
+//echo "This is after bootstrapping";
+
 $request = $_SERVER['REQUEST_URI'];
 
 switch ($request) {
@@ -14,6 +26,9 @@ switch ($request) {
         break;
     case ' ':
         require __DIR__ . '/views/index.php';
+        break;
+    case '/phpinfo':
+        phpinfo();
         break;
     /**
     case '/add_product':

@@ -19,9 +19,11 @@ services:
     image: test:shopping
     build:
       context: ./
-    #volumes:
-    #  - ${PWD}:/var/www/
+    volumes:
+      - ${PWD}:/var/www/
     ports:
       - 8000:80
     depends_on:
+      - mysql
+    links:
       - mysql

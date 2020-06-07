@@ -16,6 +16,10 @@ RUN php composer-setup.php --install-dir=/usr/local/bin/ --filename=composer
 #setup database secrets file
 COPY db_secret.prod.php /etc/db_secret.prod.php
 
+#Make php error log file
+RUN touch /var/log/php-error.log
+RUN chmod 755 /var/log/php-error.log
+
 #copy across necessary files
 COPY . /var/www/
 RUN rm /var/www/db_secret.prod.php
