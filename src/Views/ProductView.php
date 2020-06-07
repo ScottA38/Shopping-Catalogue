@@ -55,8 +55,9 @@ abstract class ProductView implements IProductView
         $cardHeader = "<div id='{$entity->getSku()}' class='card'>
                     <img src='...' class='card-img-top'>
                     <div class='card-body'>
-                        <h5 class='card-title'>$className</h5>";
-        $cardFooter = "<a href='#' class='btn btn-primary'>Delete Item</a>
+                        ";
+        $cardFooter = "<h3 class='card-title'>$className</h3>
+                <a href='#' class='btn btn-primary'>Delete Item</a>
             </div>
         </div>";
         $content = "";
@@ -66,6 +67,7 @@ abstract class ProductView implements IProductView
             if (gettype($value) === 'array') {
                 $value = implode(", ", $value);
             }
+            $content .= "\n<h5>{$field['fieldName']}</h5>";
             $content .= "\n<p class='card-text'>$value</p>";
         }
         return $cardHeader . $content . $cardFooter;
