@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace WebApp\Tests;
+namespace WebApp\Tests\Models;
 
 /**
 * Abstract base Test class which outlines testing contract for classes implementing iProduct
