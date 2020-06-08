@@ -34,7 +34,7 @@ class FurnitureTest extends TestCase implements IProductTest
     * Ensure Furniture constructor creates instance with valid args
     * @dataProvider validConstructorArgumentProvider
     */
-    public function testCanBeInstantiatedWithValidConstructorArgs(string $name, float $price, array $dimensions)
+    public function testCanBeInstantiatedWithValidConstructorArgs($name, $price, $dimensions)
     {
         //Arrange, Act
         $furniture = new Furniture($name, $price, $dimensions);
@@ -196,23 +196,13 @@ class FurnitureTest extends TestCase implements IProductTest
     }
 
     /**
-     * Test method to generate test subject instances
-     */
-    public function instanceProvider()
-    {
-        assert(count($this->furniture) > 0);
-        return $this->furniture;
-    }
-
-
-    /**
      * mock the id number in the class in order to make SKU-related functions work
      * @param Furniture
      */
     public static function seedId(Furniture $obj)
     {
         $refCls = new \ReflectionObject($obj);
-        $refProp = $refCls->getProperty('id');
+        $refProp = $refCls->getProperty('sku');
         $refProp->setAccessible(true);
         $refProp->setValue($obj, random_int(0, 1200));
     }

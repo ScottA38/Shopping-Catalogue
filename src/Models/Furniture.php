@@ -17,7 +17,7 @@ class Furniture extends Product
      *
      * @var array
      */
-    protected $dimensions;
+    protected array $dimensions;
 
 
     /**
@@ -33,8 +33,6 @@ class Furniture extends Product
         parent::__construct($name, $price);
 
         //sanity check on dimensions argument
-        assert(is_array($dimensions), 'The argument to the ' . get_class($this) .
-            ' constructor is not of type "array"');
         if (count($dimensions) !== 3) {
             throw new \LengthException('\'$dimensions\' array passed to ' . __CLASS__
                 . '\'s constructor is ' . count($dimensions) . ' items not 3.');
