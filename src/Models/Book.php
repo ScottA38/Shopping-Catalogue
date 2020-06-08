@@ -19,10 +19,12 @@ class Book extends Product
 
     public const PRODUCT_TYPE = 'Book';
 
-    public function __construct(string $name, float $price, int $weight)
+    public function __construct(string $name, float $price, float $weight)
     {
         parent::construct($name, $price);
-
+        if ($weight < 0) {
+            throw new \Exception("Weight argument to " . __BOOK__ . " cannot be a negative number.");
+        }
         $this->weight = $weight;
     }
 
