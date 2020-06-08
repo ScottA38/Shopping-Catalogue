@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace WebApp\Tests;
+namespace WebApp\Tests\Models;
 
 use WebApp\Models\Book;
 
