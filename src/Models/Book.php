@@ -21,9 +21,9 @@ class Book extends Product
 
     public function __construct(string $name, float $price, float $weight)
     {
-        parent::construct($name, $price);
+        parent::__construct($name, $price);
         if ($weight < 0) {
-            throw new \Exception("Weight argument to " . __BOOK__ . " cannot be a negative number.");
+            throw new \Exception("Weight argument to " . __METHOD__ . " cannot be a negative number.");
         }
         $this->weight = $weight;
     }

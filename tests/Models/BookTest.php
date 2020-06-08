@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace WebApp\Tests\Models;
 
 use WebApp\Models\Book;
+use Exception;
+use TypeError;
 
 /**
  * Testing unique content of Book class
@@ -14,23 +16,34 @@ use WebApp\Models\Book;
  */
 class BookTest extends ProductTest
 {
-    protected Book $book;
+    protected ?Book $book;
 
     public function setUp(): void
     {
         parent::setUp();
         $args = $this->getProvidedData();
 
+        if (count($args) !== 3) {
+            $this->book = null;
+            return;
+        }
+
         $this->book = new Book(...$args);
 
         $this->seedId($this->book);
     }
 
+    /**
+     * @dataProvider validConstructorArgumentProvider
+     */
     public function testHasWeightAttribute()
     {
         $this->assertClassHasAttribute('weight', get_class($this->book));
     }
 
+    /**
+     * @dataProvider validConstructorArgumentProvider
+     */
     public function testCannotChangeWeight()
     {
         $refCls = new \ReflectionObject($this->book);

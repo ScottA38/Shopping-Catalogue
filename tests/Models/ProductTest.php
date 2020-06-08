@@ -16,7 +16,7 @@ abstract class ProductTest extends TestCase
     public static function seedId(Product $obj)
     {
         $refCls = new \ReflectionObject($obj);
-        $refProp = $refCls->getProperty('id');
+        $refProp = $refCls->getProperty('sku');
         $refProp->setAccessible(true);
         $refProp->setValue($obj, random_int(0, 1200));
     }

@@ -74,7 +74,7 @@ class FurnitureTest extends ProductTest implements IProductTest
 
     /**
     * Ensure Furniture constructor fails with invalid args
-    * @dataProvider invalidContructorArgumentProvider
+    * @dataProvider invalidConstructorArgumentProvider
     */
     public function testCannotBeInstantiatedWithInvalidArgs($name, $price, $dimensions, $exception)
     {
