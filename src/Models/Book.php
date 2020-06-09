@@ -12,7 +12,7 @@ namespace WebApp\Models;
 class Book extends Product
 {
     /**
-     * @column(type='decimal', precision=5, scale=2)
+     * @column(type="decimal", precision=5, scale=2)
      * @var float
      */
     protected float $weight;

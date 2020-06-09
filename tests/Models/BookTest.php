@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace WebApp\Tests\Models;
 
 use WebApp\Models\Book;
-use Exception;
-use TypeError;
 
 /**
  * Testing unique content of Book class
@@ -23,14 +21,13 @@ class BookTest extends ProductTest
         parent::setUp();
         $args = $this->getProvidedData();
 
-        if (count($args) !== 3) {
+        if (count($args) === 3) {
+            $this->book = new Book(...$args);
+            self::$em->persist($this->book);
+            self::$em->flush();
+        } else {
             $this->book = null;
-            return;
         }
-
-        $this->book = new Book(...$args);
-
-        $this->seedId($this->book);
     }
 
     /**
