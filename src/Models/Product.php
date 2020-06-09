@@ -9,10 +9,6 @@ use WebApp\IComparable;
 /**
  * Not sure if this is a valid DBAL attribute combination...
  * @MappedSuperClass
- * @InheritanceType("SINGLE_TABLE")
- * @DiscriminatorColumn(name="PRODUCT_TYPE", type="string")
- * @DiscriminatorMap({"furniture"= "Furniture", "book" = "Book", "dvd-disc" = "DVD"})
- *
  */
 abstract class Product implements IComparable
 {
@@ -35,11 +31,11 @@ abstract class Product implements IComparable
     protected string $name;
 
     /**
-     * @Column(type=decimal, precision=7, scale=2)
+     * @Column(type="decimal", precision=7, scale=2)
      *
      * @var float
      */
-    protected float $price = 0.0;
+    protected float $price;
 
 
     public function __construct(string $name, float $price)
