@@ -4,44 +4,24 @@ declare(strict_types=1);
 
 namespace WebApp\Tests\Controllers;
 
-use PHPUnit\Framework\TestCase;
 use WebApp\Controllers\FurnitureController;
 use WebApp\Models\Furniture;
 use WebApp\Tests\Models\FurnitureTest;
 use WebApp\Util\ProductPopulator;
-//bootstraps doctrine entityManager
-use WebApp\Bootstrap;
-use Doctrine\ORM\EntityManager;
 use Faker\Factory;
 
-class FurnitureControllerTest extends TestCase implements IProductControllerTest
+class FurnitureControllerTest extends ProductControllerTest implements IProductControllerTest
 {
     protected FurnitureController $furnitureController;
 
-    protected array $pks;
-
-    protected static EntityManager $em;
-
-    private static array $dbParams = array('url' => "mysql://dev_admin:p455w0rd@127.0.0.1:3306/my_db");
-
-    /**
-     * set up a database connection in order to seed database for tests and verify test conditions
-     */
-    public static function setUpBeforeClass(): void
-    {
-        $bootstrap = new Bootstrap();
-        self::$em = $bootstrap->createEntityManager(self::$dbParams);
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        self::$em->clear();
-        self::$em->close();
-    }
 
     protected function setUp(): void
     {
         parent::setUp();
+
+        if (!isset($this->modelClass)) {
+            $this->modelClass = Furniture::class;
+        }
 
         $this->furnitureController = new FurnitureController(self::$em);
 
@@ -65,7 +45,7 @@ class FurnitureControllerTest extends TestCase implements IProductControllerTest
     /**
      * {@inheritDoc}
      * @see \WebApp\Tests\Controllers\IProductControllerTest::testAddProduct()
-     * @dataProvider furnitureValidArgsProvider
+     * @dataProvider validArgsProvider
      */
     public function testAddProduct(string $name, float $price, $dimensions)
     {
@@ -193,14 +173,9 @@ class FurnitureControllerTest extends TestCase implements IProductControllerTest
      * Get constructor arguments from model test
      * @return string[][]|number[][]|number[][][]
      */
-    public function furnitureValidArgsProvider()
+    public function validArgsProvider()
     {
-        return FurnitureTest::validConstructorArgumentProvider();
-    }
-
-    public function randomSkuProvider(): string
-    {
-        $furnPKs = $this->pks[Furniture::class];
-        return $furnPKs[array_rand($furnPKs)]->getSku();
+        $fTest = new FurnitureTest();
+        return $fTest->validConstructorArgumentProvider();
     }
 }

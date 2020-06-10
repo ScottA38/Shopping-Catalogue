@@ -46,6 +46,9 @@ class ProductPopulator
                     $this->generator->randomNumber(3),
                     $this->generator->randomNumber(3)
                 ];
+            },
+            'weight' => function () {
+                return $this->generator->randomNumber(3);
             }
         ];
     }

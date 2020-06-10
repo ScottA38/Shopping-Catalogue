@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace WebApp\Tests\Models;
 
+use Doctrine\ORM\EntityManager;
 use WebApp\Models\Furniture;
 use WebApp\Bootstrap;
 
@@ -193,7 +194,7 @@ class FurnitureTest extends ProductTest implements IProductTest
     /**
     * This producer gives valid constructor args
     */
-    public static function validConstructorArgumentProvider()
+    public function validConstructorArgumentProvider()
     {
         return [
             ["Table", 60.0, [120, 50, 70]],
