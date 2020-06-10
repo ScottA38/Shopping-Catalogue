@@ -21,9 +21,9 @@ abstract class ProductController implements IProductController
         $this->em = $em;
     }
 
-    public function add($name, $price, $dimensions): string
+    public function add($name, $price, $special): string
     {
-        $product = new $this->model($name, $price, $dimensions);
+        $product = new $this->model($name, $price, $special);
         $this->em->persist($product);
         $this->em->flush();
         return $product->getSku();
