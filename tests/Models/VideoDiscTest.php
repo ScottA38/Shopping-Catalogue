@@ -10,19 +10,18 @@ class VideoDiscTest extends ProductTest
 {
     protected ?VideoDisc $disc;
 
-    protected function setUp(): void
+    public function setUp(): void
     {
         parent::setUp();
         $args = $this->getProvidedData();
-        //var_dump($args);
 
-        if (count($args) !== 3) {
+        if (count($args) === 3) {
+            $this->disc = new VideoDisc(...$args);
+            self::$em->persist($this->disc);
+            self::$em->flush();
+        } else {
             $this->disc = null;
-            return;
         }
-        $this->disc = new VideoDisc(...$args);
-
-        $this->seedId($this->disc);
     }
 
     /**
