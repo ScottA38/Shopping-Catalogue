@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace WebApp\Tests\Models;
 
-use Doctrine\ORM\EntityManager;
-use PHPUnit\Framework\TestCase;
 use WebApp\Models\Furniture;
 use WebApp\Bootstrap;
 
-class FurnitureTest extends TestCase implements IProductTest
+class FurnitureTest extends ProductTest implements IProductTest
 {
 
     protected ?Furniture $furniture;
@@ -65,7 +63,7 @@ class FurnitureTest extends TestCase implements IProductTest
     * Ensure Furniture constructor creates instance with valid args
     * @dataProvider validConstructorArgumentProvider
     */
-    public function testCanBeInstantiatedWithValidConstructorArgs(string $name, float $price, array $dimensions)
+    public function testCanBeInstantiatedWithValidConstructorArgs($name, $price, $dimensions)
     {
         //Arrange, Act
         $furniture = new Furniture($name, $price, $dimensions);
@@ -76,7 +74,7 @@ class FurnitureTest extends TestCase implements IProductTest
 
     /**
     * Ensure Furniture constructor fails with invalid args
-    * @dataProvider invalidContructorArgumentProvider
+    * @dataProvider invalidConstructorArgumentProvider
     */
     public function testCannotBeInstantiatedWithInvalidArgs($name, $price, $dimensions, $exception)
     {
@@ -210,7 +208,7 @@ class FurnitureTest extends TestCase implements IProductTest
     /**
     * This producer gives constructor args followed by an expected exception type
     */
-    public static function invalidContructorArgumentProvider()
+    public function invalidConstructorArgumentProvider()
     {
         return [
             //Invalid product name (must have more than 2 consonants in the string)

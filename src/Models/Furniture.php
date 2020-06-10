@@ -17,7 +17,7 @@ class Furniture extends Product
      *
      * @var array
      */
-    protected $dimensions;
+    protected array $dimensions;
 
 
     /**
