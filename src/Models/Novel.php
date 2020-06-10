@@ -9,7 +9,7 @@ namespace WebApp\Models;
  * @author ScottAnderson
  *
  */
-class Book extends Product
+class Novel extends Product
 {
     /**
      * @column(type="decimal", precision=5, scale=2)
@@ -17,7 +17,7 @@ class Book extends Product
      */
     protected float $weight;
 
-    public const PRODUCT_TYPE = 'Book';
+    public const PRODUCT_TYPE = 'Novel';
 
     public function __construct(string $name, float $price, float $weight)
     {

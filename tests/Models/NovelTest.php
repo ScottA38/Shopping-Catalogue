@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace WebApp\Tests\Models;
 
-use WebApp\Models\Book;
+use WebApp\Models\Novel;
 
 /**
  * Testing unique content of Book class
@@ -12,9 +12,9 @@ use WebApp\Models\Book;
  * @author ScottAnderson
  *
  */
-class BookTest extends ProductTest
+class NovelTest extends ProductTest
 {
-    protected ?Book $book;
+    protected ?Novel $novel;
 
     public function setUp(): void
     {
@@ -22,11 +22,11 @@ class BookTest extends ProductTest
         $args = $this->getProvidedData();
 
         if (count($args) === 3) {
-            $this->book = new Book(...$args);
-            self::$em->persist($this->book);
+            $this->novel = new Novel(...$args);
+            self::$em->persist($this->novel);
             self::$em->flush();
         } else {
-            $this->book = null;
+            $this->novel = null;
         }
     }
 
@@ -35,7 +35,7 @@ class BookTest extends ProductTest
      */
     public function testHasWeightAttribute()
     {
-        $this->assertClassHasAttribute('weight', get_class($this->book));
+        $this->assertClassHasAttribute('weight', get_class($this->novel));
     }
 
     /**
@@ -43,11 +43,11 @@ class BookTest extends ProductTest
      */
     public function testCannotChangeWeight()
     {
-        $refCls = new \ReflectionObject($this->book);
+        $refCls = new \ReflectionObject($this->novel);
         $refProp = $refCls->getProperty('weight');
 
         $this->assertFalse($refProp->isPublic());
-        $this->assertClassNotHasAttribute('setWeight', get_class($this->book));
+        $this->assertClassNotHasAttribute('setWeight', get_class($this->novel));
     }
 
     /**
@@ -56,9 +56,9 @@ class BookTest extends ProductTest
      */
     public function testCanBeInstantiatedWithValidConstructorArgs($name, $price, $weight)
     {
-        $book = new Book($name, $price, $weight);
+        $book = new Novel($name, $price, $weight);
 
-        $this->assertInstanceOf(Book::class, $book);
+        $this->assertInstanceOf(Novel::class, $book);
     }
 
     /**
@@ -70,7 +70,7 @@ class BookTest extends ProductTest
     {
         $this->expectException($exception);
 
-        new Book($name, $price, $weight);
+        new Novel($name, $price, $weight);
     }
 
     public function validConstructorArgumentProvider()
