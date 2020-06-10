@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace WebApp\Tests\Models;
 
-use WebApp\Models\DVDDisc;
+use WebApp\Models\VideoDisc;
 
-class DVDDiscTest extends ProductTest
+class VideoDiscTest extends ProductTest
 {
-    protected ?DVDDisc $disc;
+    protected ?VideoDisc $disc;
 
     protected function setUp(): void
     {
@@ -20,7 +20,7 @@ class DVDDiscTest extends ProductTest
             $this->disc = null;
             return;
         }
-        $this->disc = new DVDDisc(...$args);
+        $this->disc = new VideoDisc(...$args);
 
         $this->seedId($this->disc);
     }
@@ -32,9 +32,9 @@ class DVDDiscTest extends ProductTest
      */
     public function testCanBeInstantiatedWithValidConstructorArgs($name, $price, $size)
     {
-        $disc = new DVDDisc($name, $price, $size);
+        $disc = new VideoDisc($name, $price, $size);
 
-        $this->assertInstanceOf(DVDDisc::class, $disc);
+        $this->assertInstanceOf(VideoDisc::class, $disc);
     }
 
     /**
@@ -46,7 +46,7 @@ class DVDDiscTest extends ProductTest
     {
         $this->expectException($exception);
 
-        new DVDDisc($name, $price, $size);
+        new VideoDisc($name, $price, $size);
     }
 
     /**

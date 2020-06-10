@@ -8,15 +8,15 @@ namespace WebApp\Models;
  * @entity
  * @author ScottAnderson
  */
-class DVDDisc extends Product
+class VideoDisc extends Product
 {
     /**
-     * @column(type="int")
+     * @column(type="integer")
      * @var int
      */
     protected int $size;
 
-    public const PRODUCT_TYPE = 'dvd-disc';
+    public const PRODUCT_TYPE = 'video-disc';
 
     public function __construct(string $name, float $price, int $size)
     {
