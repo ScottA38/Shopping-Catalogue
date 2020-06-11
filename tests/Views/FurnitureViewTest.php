@@ -66,6 +66,7 @@ class FurnitureControllerTest extends TestCase implements IProductViewTest
         $output = implode($output);
         $domDoc->loadHTML($output);
 
+        //debug to see actual output of class if errors occur
         $output_file = fopen("/tmp/output__" . $this->getName() . ".html", "w");
         //use 'output' variable from testcase with html string
         fwrite($output_file, $output);
@@ -87,6 +88,7 @@ class FurnitureControllerTest extends TestCase implements IProductViewTest
         $output = $this->furnitureView->displayForm();
         $domDoc->loadHTML($output);
 
+        //debug HTML output to find errors if reported (error messages from libxml are vague)
         $output_file = fopen("/tmp/output__" . $this->getName() . ".html", "w");
         //use 'output' variable from testcase with html string
         fwrite($output_file, $output);

@@ -4,11 +4,8 @@ declare(strict_types=1);
 
 namespace WebApp\Views;
 
-use WebApp\Bootstrap;
 use WebApp\Models\Product;
 use WebApp\Controllers\ProductController;
-use Doctrine\ORM\EntityManager;
-use WebApp\Controllers\IProductController;
 
 abstract class ProductView implements IProductView
 {
