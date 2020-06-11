@@ -14,14 +14,20 @@ require_once "/etc/db_secret.prod.php";
 use WebApp\Bootstrap;
 use WebApp\Util\ProductPopulator;
 use WebApp\Models\Furniture;
+use WebApp\Models\Novel;
+use WebApp\Models\VideoDisc;
 
 //get Doctrine entityManager
 $bootstrap = new Bootstrap();
 $em = $bootstrap->createEntityManager(DBPARAMS);
 
+$entityNames = [Furniture::class, Novel::class, VideoDisc::class];
+
 //generate some Doctrine entity instances in the database
 $populator = new ProductPopulator($em);
-$populator->populate(Furniture::class, 20);
+foreach ($entityNames as &$name) {
+    $populator->populate($name, 20);
+}
 
 //echo "This is after bootstrapping";
 
@@ -45,6 +51,8 @@ switch ($request) {
         require __DIR__ . '/views/404.php';
 }
 
-$className = Furniture::class;
-$query = $em->createQuery("DELETE FROM $className");
-$query->execute();
+//clear all tables again
+foreach ($entityNames as &$name) {
+    $query = $em->createQuery("DELETE FROM $name");
+    $query->execute();
+}
