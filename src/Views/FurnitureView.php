@@ -22,7 +22,6 @@ class FurnitureView extends ProductView
      */
     public function __construct(EntityManager $em)
     {
-        parent::__construct();
         $this->controller = new FurnitureController($em);
     }
 }

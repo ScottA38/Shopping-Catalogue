@@ -24,14 +24,6 @@ abstract class ProductView implements IProductView
     ];
 
     /**
-     * Abstract constructor to ensure specific properties are initialised
-     */
-    public function __construct()
-    {
-        assert(isset($this->arrayFormDefinitions));
-    }
-
-    /**
      * Function to build all cards which display products for a specific type
      * @return array
      */
@@ -50,7 +42,7 @@ abstract class ProductView implements IProductView
         $nSs = explode("\\", get_class($entity));
         $className = end($nSs);
         $cardHeader = "<div id='{$entity->getSku()}' class='card'>
-                    <img src='...' class='card-img-top'>
+                    <img src='...' class='rounded card-img-top img-thumbnail'>
                     <div class='card-body'>
                         ";
         $cardFooter = "<h3 class='card-title'>$className</h3>

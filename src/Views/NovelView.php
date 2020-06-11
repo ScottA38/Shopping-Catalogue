@@ -11,7 +11,6 @@ class NovelView extends ProductView
 {
     public function __construct(EntityManager $em)
     {
-        parent::__construct();
         $this->controller = new NovelController($em);
     }
 }

@@ -11,7 +11,6 @@ class VideoDiscView extends ProductView
 {
     public function __construct(EntityManager $em)
     {
-        parent::__construct();
         $this->controller = new VideoDiscController($em);
     }
 }
