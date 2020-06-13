@@ -6,7 +6,10 @@
 
 #enable PHP error logging
 php_flag log_errors on
-php_flag error_log /var/log/php-error.log
+php_value error_log /var/log/php-error.log
+
+#setting up session path
+php_value session.save_path /tmp
 
 RewriteEngine On
 RewriteBase /

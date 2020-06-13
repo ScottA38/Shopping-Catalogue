@@ -16,7 +16,6 @@ $cards = [];
 foreach ($viewers as &$view) {
     $cards = array_merge($cards, $view->displayAll());
 }
-
 foreach ($cards as &$card) {
     echo $card;
 }
