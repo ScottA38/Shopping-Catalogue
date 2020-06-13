@@ -42,7 +42,7 @@ abstract class ProductView implements IProductView
         $nSs = explode("\\", get_class($entity));
         $className = end($nSs);
         $cardHeader = "<div id='{$entity->getSku()}' class='card'>
-                    <img src='...' class='rounded card-img-top img-thumbnail'>
+                    <img src='...' class='rounded img-thumbnail'>
                     <div class='card-body'>
                         ";
         $cardFooter = "<h3 class='card-title'>$className</h3>
@@ -64,9 +64,9 @@ abstract class ProductView implements IProductView
 
     public function displayForm(): string
     {
-        $formHeader = "<form action='TODO' method='#'>";
+        $formHeader = "<form action='responder' method='POST'>";
         $formFields = "";
-        $formFooter = "</form>";
+        $formFooter = "<input type='submit' name='submit' value='submit'>\n</form>";
         foreach (array_values($this->controller->getFieldMap()) as $fieldConfig) {
             //var_dump($fieldConfig);
             $formFields .= $this->makeFormField($fieldConfig);
@@ -90,11 +90,12 @@ abstract class ProductView implements IProductView
             for ($i = 0; $i < $arrayFieldDefinition['length']; $i++) {
                 $arrayInputName = $inputName . "[" . $i . "]";
                 $inputs .= "<label for='$arrayInputName'>{$fieldConfig['fieldName']}</label>
-            <input $membersTypeMapping class='form-control' id='$arrayInputName'>";
+            <input $membersTypeMapping class='form-control' id='$arrayInputName' name='$arrayInputName'>";
             }
         } else {
             $inputs = "<label for='$inputName'>{$fieldConfig['fieldName']}</label>
-            <input {$this->formTypeMappings[$fieldConfig['type']]} class='form-control' id=$inputName>";
+            <input {$this->formTypeMappings[$fieldConfig['type']]} class='form-control'
+id=$inputName name='$inputName'>";
         }
 
         return $formHeader . $inputs . $formFooter;
