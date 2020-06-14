@@ -41,14 +41,13 @@ abstract class ProductView implements IProductView
     {
         $nSs = explode("\\", get_class($entity));
         $className = end($nSs);
-        $cardHeader = "<div id='{$entity->getSku()}' class='card'>
-                    <img src='...' class='rounded img-thumbnail'>
-                    <div class='card-body'>
-                        ";
-        $cardFooter = "<h3 class='card-title'>$className</h3>
-                <a href='#' class='btn btn-primary'>Delete Item</a>
-            </div>
-        </div>";
+        $cardHeader = "\n<div id='{$entity->getSku()}' class='card'>
+    <img src='...' class='rounded img-thumbnail'>
+    <div class='card-body'>";
+        $cardFooter = "\n<h3 class='card-title'>$className</h3>
+        <a class='btn btn-primary' onclick='asyncDisplayCards(event)'>Delete Item</a>
+    </div>
+</div>";
         $content = "";
         foreach ($this->controller->getFieldMap() as &$field) {
             $methodName = "get" . $field['fieldName'];
