@@ -24,20 +24,21 @@ $entityNames = [Furniture::class, Novel::class, VideoDisc::class];
 $bootstrap = new Bootstrap();
 $em = $bootstrap->createEntityManager(DBPARAMS);
 
+$request = parse_url($_SERVER['REQUEST_URI']);
+
+
 if (session_status() == PHP_SESSION_NONE) {
     //echo "<h1>" . session_id() . "</h1>";
 
     //generate some Doctrine entity instances in the database
     $populator = new ProductPopulator($em);
     foreach ($entityNames as &$name) {
-        var_dump($em->createQuery("DELETE FROM $name")->execute());
-        $populator->populate($name, 20);
+        $em->createQuery("DELETE FROM $name")->execute();
+        $populator->populate($name, 5);
     }
 }
 
-$request = $_SERVER['REQUEST_URI'];
-
-switch ($request) {
+switch ($request['path']) {
     case '/':
         require __DIR__ . '/views/index.php';
         break;
