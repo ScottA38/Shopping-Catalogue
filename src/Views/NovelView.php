@@ -11,6 +11,7 @@ class NovelView extends ProductView
 {
     public function __construct(EntityManager $em)
     {
+        $this->formHints = array_merge($this->formHints, [ 'weight' => 'Enter the weight of the Book (kg)']);
         $this->controller = new NovelController($em);
     }
 }

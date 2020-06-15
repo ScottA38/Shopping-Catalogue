@@ -17,6 +17,11 @@ abstract class ProductView implements IProductView
      */
     protected ProductController $controller;
 
+    protected array $formHints = [
+        'name' => 'Specify the name of the new Product (text)',
+        'price' => 'Please specify the price of the Product (€NN.NN)'
+    ];
+
     protected array $formTypeMappings = [
         "string" => "type='text'",
         "integer" => "type='number' step='1'",
@@ -78,25 +83,39 @@ abstract class ProductView implements IProductView
         $formHeader = "<div class='form-group'>";
         $inputs = "";
         $formFooter = "</div>";
+
         //identifier name in form inputs
         $inputName = $fieldConfig['fieldName'] . "Input";
+
         if ($fieldConfig['type'] === "array") {
-            //sanity check that this array type is defined for the [entityType]View class
-            assert(isset($this->arrayFormDefinitions[$fieldConfig['fieldName']]));
-            //get member information for specific array type field
-            $arrayFieldDefinition = $this->arrayFormDefinitions[$fieldConfig['fieldName']];
-            $membersTypeMapping = $this->formTypeMappings[$arrayFieldDefinition['membersType']];
-            for ($i = 0; $i < $arrayFieldDefinition['length']; $i++) {
-                $arrayInputName = $inputName . "[" . $i . "]";
-                $inputs .= "<label for='$arrayInputName'>{$fieldConfig['fieldName']}</label>
-            <input $membersTypeMapping class='form-control' id='$arrayInputName' name='$arrayInputName'>";
-            }
+            $inputs = $this->makeArrayFormField($fieldConfig, $inputName);
         } else {
-            $inputs = "<label for='$inputName'>{$fieldConfig['fieldName']}</label>
+            $inputs = "<label class='lead font-weight-bold' for='$inputName'>{$fieldConfig['fieldName']}:
+<span class='text-muted'>{$this->formHints[$fieldConfig['fieldName']]}</span></label>
             <input {$this->formTypeMappings[$fieldConfig['type']]} class='form-control'
 id=$inputName name='$inputName'>";
         }
 
         return $formHeader . $inputs . $formFooter;
+    }
+
+    private function makeArrayFormField(array $fieldConfig, string $inputName)
+    {
+        $fields = "";
+        $formHints = $this->formHints[$fieldConfig['fieldName']];
+
+        //get member information for specific array type field
+        $arrayFieldDefinition = $this->arrayFormDefinitions[$fieldConfig['fieldName']];
+        assert(is_array($formHints) && count($formHints) === $arrayFieldDefinition['length']);
+
+        for ($i = 0; $i < $arrayFieldDefinition['length']; $i++) {
+            $arrayInputName = $inputName . "[" . $i . "]";
+
+            $fields .= "\n<label class='lead font-weight-bold' for='$arrayInputName'>{$fieldConfig['fieldName']}:
+<span class='text-muted'>{$formHints[$i]}</span></label>
+            <input {$this->formTypeMappings[$arrayFieldDefinition['membersType']]} class='form-control'
+id='$arrayInputName' name='$arrayInputName'>";
+        }
+        return $fields;
     }
 }
