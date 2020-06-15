@@ -15,9 +15,8 @@ function asyncDisplayCards(event)
 	xmlhttp.onload = function () {
 		let htmlBody = document.getElementsByTagName('body')[0];
 		let nodes = this.responseXML.body.childNodes;
-		console.log(this.responseXML.body.outerHTML)
 		console.log(nodes);
-		//console.log("amount of nodes is: ", nodes.length);
+		//console.log(this.responseXML.body.outerHTML)
 		for(let i = 0; i < nodes.length; i++)
 		{
 			htmlBody.appendChild(nodes.item(i));

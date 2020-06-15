@@ -12,8 +12,10 @@ require_once "/etc/db_secret.prod.php";
 use WebApp\Bootstrap;
 
 $bootstrap = new Bootstrap();
-$em = $bootstrap->creatEntityManager(DBPARAMS);
+$em = $bootstrap->createEntityManager(DBPARAMS);
 
-$viewName = "WebApp\Views\\{$_GET['type']}View";
+$type = strtolower($_GET['type']);
+
+$viewName = "WebApp\Views\\{$type}View";
 $viewer = new $viewName($em);
 echo $viewer->displayForm();
