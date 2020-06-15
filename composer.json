@@ -5,7 +5,8 @@
 		"fzaninotto/faker": "~1.9"
 	},
 	"require": {
-		"doctrine/orm": "2.7.2"
+		"doctrine/orm": "2.7.2",
+		"haydenpierce/class-finder": "0.4.2"
 	},
 	"autoload" : {
 		"psr-4": {
