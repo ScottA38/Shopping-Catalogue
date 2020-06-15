@@ -29,6 +29,14 @@ abstract class ProductView implements IProductView
     ];
 
     /**
+     * Abstract constructor to ensure specific properties are initialised
+     */
+    public function __construct()
+    {
+        //assert(isset($this->arrayFormDefinitions));
+    }
+
+    /**
      * Function to build all cards which display products for a specific type
      * @return array
      */
@@ -72,6 +80,9 @@ abstract class ProductView implements IProductView
         $formFields = "";
         $formFooter = "<input type='submit' name='submit' value='submit'>\n</form>";
         foreach (array_values($this->controller->getFieldMap()) as $fieldConfig) {
+            if ($fieldConfig['fieldName'] === 'sku') {
+                continue;
+            }
             //var_dump($fieldConfig);
             $formFields .= $this->makeFormField($fieldConfig);
         }
@@ -84,8 +95,8 @@ abstract class ProductView implements IProductView
         $inputs = "";
         $formFooter = "</div>";
 
-        //identifier name in form inputs
-        $inputName = $fieldConfig['fieldName'] . "Input";
+        //data helpers
+        $inputName = $fieldConfig['fieldName'];
 
         if ($fieldConfig['type'] === "array") {
             $inputs = $this->makeArrayFormField($fieldConfig, $inputName);
@@ -111,7 +122,7 @@ id=$inputName name='$inputName'>";
         for ($i = 0; $i < $arrayFieldDefinition['length']; $i++) {
             $arrayInputName = $inputName . "[" . $i . "]";
 
-            $fields .= "\n<label class='lead font-weight-bold' for='$arrayInputName'>{$fieldConfig['fieldName']}:
+            $fields .= "\n<label class='lead font-weight-bold' for='$arrayInputName'>$inputName:
 <span class='text-muted'>{$formHints[$i]}</span></label>
             <input {$this->formTypeMappings[$arrayFieldDefinition['membersType']]} class='form-control'
 id='$arrayInputName' name='$arrayInputName'>";
