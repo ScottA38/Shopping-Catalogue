@@ -22,6 +22,8 @@ class FurnitureView extends ProductView
      */
     public function __construct(EntityManager $em)
     {
+        $this->formHints = array_merge($this->formHints, [ 'dimensions' =>
+            ['Please enter the height (cm)', 'Please enter the width (cm)', 'Please enter the height (cm)']]);
         $this->controller = new FurnitureController($em);
     }
 }
