@@ -1,5 +1,9 @@
 # Outstanding development tasks
 
+## Documentation
+
+- [ ] Update readme with installation and setup instructions (for docker and session-ing)
+
 ## Security
 
 - [x] Put all database connection parameters in a secret file deeper in the server file hierarchy
@@ -14,6 +18,7 @@
 ## Webpages
 
 - [x] Wireframe each product 'card' with data about to inform ProductView methods **high priority**
+- [ ] Make PHP sessions work without commenting and un-commenting session_start()
 
 ## Deployment
 
@@ -22,10 +27,11 @@
 - ~~[ ] Integrate `twig` into the project's composer~~~*not required*
 	- ~~[ ] Produce some html templates and construct page drafts using twig~~
 - [x] Add `src/html` dir
-- [ ] Parse `$_GET` parameters from URL and trim them off of the string in `src/html/index.php`
+- [ ] ~~Parse `$_GET` parameters from URL and trim them off of the string in `src/html/index.php`~~ *this can be achieved easier with array from php built-in `parse_url()`*
 	- [ ] Write 'responder' class or file to parse $_POST or $_GET data and make appropriate actions (will be target of URL form)
-- [ ] Make the content `src/html/views/index.php` and `src/html/views/add_product.php` AJAX-generated (Make `src/html/generated` directory with product generators)
+- [x] Make the content `src/html/views/index.php` and `src/html/views/add_product.php` AJAX-generated (Make `src/html/generated` directory with product generators)
     - [ ] Figure out how to program script supplying form inputs to `add_product.php` to detect what class properties to render *(php parameters to included file?)*
+- [ ] Change .HTACCESS not to display errors to screen (un-comment in `.htaccess`)
 
 ## Version Control
 
