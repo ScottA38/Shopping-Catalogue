@@ -17,3 +17,14 @@ function makeQuery(queryParams)
 	});
 	return queryString;
 }
+
+function makePOSTParams(postParams)
+{
+	let queryString = "";
+
+	Object.keys(postParams).forEach(function(key)
+	{
+		queryString = queryString.concat(`${key}=${postParams[key]}&`);
+	});
+	return queryString;
+}
