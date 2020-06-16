@@ -25,7 +25,7 @@ class ProductResponder
     /**
      * Function takes post array and
      */
-    public static function filterArray(): ?array
+    public static function processPost(): ?array
     {
         $filtered = [];
         assert($_POST, "No post variables to process!");
@@ -36,11 +36,23 @@ class ProductResponder
             } elseif (array_key_exists($paramKey, self::$validationFilters)) {
                 throw new \Exception("parameter key '$paramKey' does not have a matching validation filter");
             }
-            $temp = filter_input(INPUT_POST, $paramKey, ...self::$sanitisationFilters[$paramKey]);
-            $temp = filter_var($temp, ...self::$validationFilters[$paramKey]);
-            assert($temp, "Variable processed unsuccessfully");
+            //intialise a variable to save to 'filtered' array
+            $temp = null;
+            if (gettype($_POST[$paramKey]) === "array") {
+                $temp = array_map('self::filterInput', $_POST[$paramKey]);
+            } else {
+                $temp = self::filterInput($paramKey);
+            }
             $filtered[$paramKey] = $temp;
         }
         return $filtered;
+    }
+
+    protected static function filterInput(string $paramKey)
+    {
+        $temp = filter_input(INPUT_POST, $paramKey, ...self::$sanitisationFilters[$paramKey]);
+        $temp = filter_var($temp, ...self::$validationFilters[$paramKey]);
+        assert($temp, "Variable processed unsuccessfully");
+        return $temp;
     }
 }
