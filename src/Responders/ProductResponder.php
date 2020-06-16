@@ -16,10 +16,10 @@ class ProductResponder
 
     protected static array $sanitisationFilters = [
         'name' => [FILTER_SANITIZE_STRING, ["flags" => [FILTER_FLAG_STRIP_HIGH, FILTER_FLAG_STRIP_HIGH]]],
-        'price' => [FILTER_SANITIZE_NUMBER_FLOAT, ["flags" => [FILTER_FLAG_ALLOW_FRACTION]]],
+        'price' => [FILTER_SANITIZE_NUMBER_FLOAT, ["flags" => FILTER_FLAG_ALLOW_FRACTION]],
         'dimensions' => [FILTER_SANITIZE_NUMBER_INT],
         'size' => [FILTER_SANITIZE_NUMBER_INT],
-        'weight' => [FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION],
+        'weight' => [FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION]
     ];
 
     /**
@@ -33,26 +33,42 @@ class ProductResponder
         foreach (array_keys($_POST) as &$paramKey) {
             if (!array_key_exists($paramKey, self::$sanitisationFilters)) {
                 throw new \Exception("parameter key '$paramKey' does not have a matching sanitisation filter");
-            } elseif (array_key_exists($paramKey, self::$validationFilters)) {
+            } elseif (!array_key_exists($paramKey, self::$validationFilters)) {
+                //var_dump(self::$validationFilters);
                 throw new \Exception("parameter key '$paramKey' does not have a matching validation filter");
             }
-            //intialise a variable to save to 'filtered' array
-            $temp = null;
-            if (gettype($_POST[$paramKey]) === "array") {
-                $temp = array_map('self::filterInput', $_POST[$paramKey]);
-            } else {
-                $temp = self::filterInput($paramKey);
-            }
-            $filtered[$paramKey] = $temp;
+            $filtered[$paramKey] = self::selectFilter($paramKey);
         }
         return $filtered;
     }
 
-    protected static function filterInput(string $paramKey)
+    protected static function filterInput($value, array $sanFilter, array $valFilter)
     {
-        $temp = filter_input(INPUT_POST, $paramKey, ...self::$sanitisationFilters[$paramKey]);
-        $temp = filter_var($temp, ...self::$validationFilters[$paramKey]);
-        assert($temp, "Variable processed unsuccessfully");
+        $temp = filter_var($value, ...$sanFilter);
+        if ($temp === null) {
+            throw new \Exception("Variable $paramKey failed sanitisation");
+        }
+        $temp = filter_var($value, ...$valFilter);
+        if ($temp === null) {
+            throw new \Exception("Variable $paramKey failed validation");
+        }
         return $temp;
+    }
+
+    protected static function selectFilter(string $paramKey)
+    {
+        $sanFilter = self::$sanitisationFilters[$paramKey];
+        $valFilter = self::$validationFilters[$paramKey];
+
+        if (gettype($_POST[$paramKey]) === "array") {
+            $filteredArray = [];
+            for ($i = 0; $i < count($_POST[$paramKey]); $i++) {
+                $filteredValue = self::filterInput($_POST[$paramKey][$i], $sanFilter, $valFilter);
+                array_push($filteredArray, $filteredValue);
+            }
+            return $filteredArray;
+        } else {
+            return self::filterInput($_POST[$paramKey], $sanFilter, $valFilter);
+        }
     }
 }
