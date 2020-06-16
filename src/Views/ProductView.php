@@ -76,9 +76,11 @@ abstract class ProductView implements IProductView
 
     public function displayForm(): string
     {
-        $formHeader = "<form action='responder' method='POST'>";
+        $modelName = end(explode('\\', $this->controller->getModelName()));
+        $formHeader = "<form action='add_product' method='POST'>";
         $formFields = "";
-        $formFooter = "<input type='submit' name='submit' value='submit'>\n</form>";
+        $formFooter = "     <input type='hidden' name='type' value='$modelName'>
+<input type='submit'>\n</form>";
         foreach (array_values($this->controller->getFieldMap()) as $fieldConfig) {
             if ($fieldConfig['fieldName'] === 'sku') {
                 continue;

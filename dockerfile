@@ -28,7 +28,7 @@ RUN rm /var/www/db_secret.prod.php
 RUN sed -i 's+/var/www/html+/var/www/src/html+i' /etc/apache2/sites-available/000-default.conf
 
 #Install php testing
-RUN cd .. && composer update && composer install --no-dev
+RUN cd .. && composer install --no-dev
 
 #RUN cd .. && vendor/bin/doctrine orm:schema-tool:create
 

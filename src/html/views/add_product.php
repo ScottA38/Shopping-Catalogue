@@ -8,6 +8,10 @@ assert(isset($em), "No Doctrine entityManager initialised for the view file");
 
 include "templates/header.html";
 
+if ($_POST) {
+    include "Generated/AddProduct.php";
+}
+
 $classNames = ClassFinder::getClassesInNamespace('WebApp\Models');
 $classNames = array_map(function ($value) {
     return end(explode('\\', $value));
