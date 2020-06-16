@@ -15,9 +15,6 @@ use WebApp\Models\Furniture;
 use WebApp\Models\Novel;
 use WebApp\Models\VideoDisc;
 
-session_start();
-//var_dump(session_id());
-
 $entityNames = [Furniture::class, Novel::class, VideoDisc::class];
 
 //get Doctrine entityManager
@@ -26,10 +23,14 @@ $em = $bootstrap->createEntityManager(DBPARAMS);
 
 $request = parse_url($_SERVER['REQUEST_URI']);
 
+$reposPopulated = array_reduce($entityNames, function ($carry, $className) {
+    //get Doctrine entityManager
+    $bootstrap = new Bootstrap();
+    $em = $bootstrap->createEntityManager(DBPARAMS);
+    return count($em->getRepository($className)->findAll()) > 0 ? true : $carry;
+}, false);
 
-if (session_status() == PHP_SESSION_NONE) {
-    //echo "<h1>" . session_id() . "</h1>";
-
+if (!$reposPopulated) {
     //generate some Doctrine entity instances in the database
     $populator = new ProductPopulator($em);
     foreach ($entityNames as &$name) {
@@ -44,9 +45,6 @@ switch ($request['path']) {
         break;
     case ' ':
         require __DIR__ . '/views/index.php';
-        break;
-    case '/phpinfo':
-        phpinfo();
         break;
     case '/add_product':
         require __DIR__ . '/views/add_product.php';
