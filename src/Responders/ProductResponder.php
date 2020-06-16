@@ -8,18 +8,18 @@ class ProductResponder
 {
     protected static array $validationFilters = [
         'name' => [],
-        'price' => [FILTER_VALIDATE_FLOAT, 2, 0],
-        'dimensions' => [FILTER_VALIDATE_INT, null, 0, 1000],
-        'size' => [FILTER_VALIDATE_INT, null, 0],
-        'weight' => [FILTER_VALIDATE_FLOAT, 2, 0, 1000]
+        'price' => [FILTER_VALIDATE_FLOAT, ["decimal" => 2, "min_range" => 0]],
+        'dimensions' => [FILTER_VALIDATE_INT, ["min_range" => 0, "max_range" => 1000]],
+        'size' => [FILTER_VALIDATE_INT, ["min_range" => 0]],
+        'weight' => [FILTER_VALIDATE_FLOAT, ["decimal" => 2, "min_range" => 0, "max_range" => 1000]]
     ];
 
     protected static array $sanitisationFilters = [
-        'name' => [FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH, FILTER_FLAG_STRIP_HIGH],
-        'price' => [FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION],
+        'name' => [FILTER_SANITIZE_STRING, ["flags" => [FILTER_FLAG_STRIP_HIGH, FILTER_FLAG_STRIP_HIGH]]],
+        'price' => [FILTER_SANITIZE_NUMBER_FLOAT, ["flags" => [FILTER_FLAG_ALLOW_FRACTION]]],
         'dimensions' => [FILTER_SANITIZE_NUMBER_INT],
         'size' => [FILTER_SANITIZE_NUMBER_INT],
-        'weight' => [FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION],
+        'weight' => [FILTER_SANITIZE_NUMBER_FLOAT, ["flags" => [FILTER_FLAG_ALLOW_FRACTION]]],
     ];
 
     /**
