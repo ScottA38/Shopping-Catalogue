@@ -18,7 +18,8 @@ abstract class ProductView implements IProductView
     protected ProductController $controller;
 
     protected array $formHints = [
-        'name' => 'Specify the name of the new Product (text)',
+        'name' => 'Specify the name of the new Product (text).
+<strong>N.B: this name must contain more than 3 consonants to be a valid name</strong>',
         'price' => 'Please specify the price of the Product (€NN.NN)'
     ];
 
